@@ -1,17 +1,96 @@
 ---
 import '../styles/global.css';
+import Backdrop from '../components/Backdrop.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
 
-const { title = 'Luka Jerman' } = Astro.props;
+interface Props {
+  title?: string;
+  description?: string;
+  /** Set on blog posts so link previews and search engines treat them as articles. */
+  article?: { published: Date };
+}
+
+const {
+  title = 'Luka Jerman',
+  description = 'Personal site of Luka Jerman - projects, writing, and what I am building.',
+  article,
+} = Astro.props;
+
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL('/og-image.png', Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+{/* Rendered dark so the default holds without JavaScript; the inline script
+    below swaps it to light for anyone who chose that. */}
+<html lang="en" data-theme="dark" style="color-scheme: dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="canonical" href={canonical} />
+
     <title>{title}</title>
+    <meta name="description" content={description} />
+
+    <link
+      rel="alternate"
+      type="application/rss+xml"
+      title="Luka Jerman"
+      href="/rss.xml"
+    />
+
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:site_name" content="Luka Jerman" />
+    {
+      article && (
+        <meta
+          property="article:published_time"
+          content={article.published.toISOString()}
+        />
+      )
+    }
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    {/*
+      Runs before the body is parsed, on purpose. If the theme were applied
+      after paint, a person who chose dark would get a white flash on every
+      navigation. `is:inline` keeps Astro from hoisting it into the bundled
+      module scripts, which are deferred and would arrive too late.
+    */}
+    <script is:inline>
+      (() => {
+        // Dark is the design's default; light is the opt-out. The OS setting is
+        // deliberately not consulted, so the site looks the way it was designed
+        // to until someone says otherwise.
+        const theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.style.colorScheme = theme;
+      })();
+    </script>
   </head>
-  <body>
-    <slot />
+
+  <body
+    class="bg-white text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200"
+  >
+    <Backdrop />
+
+    <div class="relative mx-auto flex min-h-screen max-w-2xl flex-col px-6">
+      <Header />
+      <main class="flex-1 py-14">
+        <slot />
+      </main>
+      <Footer />
+    </div>
   </body>
 </html>

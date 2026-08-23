@@ -1,0 +1,116 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { education, experience, skills } from '../lib/cv';
+
+const linkClass =
+  'underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-slate-600 dark:decoration-slate-700 dark:hover:decoration-slate-400';
+---
+
+<Layout
+  title="CV - Luka Jerman"
+  description="Experience, education, and what I work with."
+>
+  <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+    CV
+  </h1>
+
+  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
+    Four years of software engineering across vessel monitoring, ERP, and
+    enterprise document management. The short version is on the <a href="/" class={linkClass}>home page</a>.
+  </p>
+
+  <section class="mt-14">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+      Experience
+    </h2>
+
+    <ol class="mt-6 space-y-12">
+      {
+        experience.map((job) => (
+          <li>
+            <div class="flex items-baseline justify-between gap-x-4">
+              <h3 class="min-w-0 font-medium text-slate-900 dark:text-slate-100">
+                {job.role} &middot; {job.org}
+              </h3>
+              <span class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                {job.period}
+              </span>
+            </div>
+
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {job.focus}
+            </p>
+
+            <p class="mt-3 leading-relaxed text-slate-600 dark:text-slate-400">
+              {job.blurb}
+            </p>
+
+            <ul class="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-slate-600 dark:text-slate-400">
+              {job.notes.map((note) => (
+                <li>{note}</li>
+              ))}
+            </ul>
+
+            <ul class="mt-4 flex flex-wrap gap-2">
+              {job.stack.map((item) => (
+                <li class="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="mt-14">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+      Education
+    </h2>
+
+    <ol class="mt-6 space-y-6">
+      {
+        education.map((item) => (
+          <li>
+            <div class="flex items-baseline justify-between gap-x-4">
+              <h3 class="min-w-0 font-medium text-slate-900 dark:text-slate-100">
+                {item.what}
+              </h3>
+              <span class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+                {item.period}
+              </span>
+            </div>
+            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
+              {item.org}
+            </p>
+            <p class="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">
+              {item.note}
+            </p>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="mt-14">
+    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
+      Skills
+    </h2>
+
+    <dl class="mt-6 space-y-4">
+      {
+        skills.map((skill) => (
+          <div class="sm:flex sm:gap-6">
+            <dt class="w-28 shrink-0 font-medium text-slate-900 dark:text-slate-100">
+              {skill.group}
+            </dt>
+            <dd class="text-slate-600 dark:text-slate-400">
+              {skill.items.join(', ')}
+            </dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+</Layout>

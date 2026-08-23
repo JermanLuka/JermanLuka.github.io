@@ -1,0 +1,90 @@
+---
+import ThemeToggle from './ThemeToggle.astro';
+
+const links = [
+  { href: '/', label: 'Home' },
+  { href: '/cv', label: 'CV' },
+  { href: '/projects', label: 'Projects' },
+  { href: '/blog', label: 'Blog' },
+  { href: '/contact', label: 'Contact' },
+];
+
+// Normalize away any trailing slash so "/cv/" still matches "/cv".
+const path = Astro.url.pathname.replace(/\/+$/, '') || '/';
+---
+
+<header class="flex flex-wrap items-center justify-between gap-x-6 gap-y-3 border-b border-slate-200 py-6 dark:border-slate-800">
+  <a href="/" aria-label="Luka Jerman, home" class="logo">
+    <svg viewBox="0 0 64 64" aria-hidden="true" class="h-9 w-9">
+      <rect width="64" height="64" rx="14" class="plate" />
+      <g class="mark">
+        <path d="M16 16h6v26h8v6H16z" />
+        <path d="M42 16h6v20c0 6.6-5.4 12-12 12h-2v-6h2c3.3 0 6-2.7 6-6z" />
+      </g>
+    </svg>
+  </a>
+
+  <div class="flex items-center gap-3">
+    <nav aria-label="Main">
+    <ul class="flex flex-wrap items-center gap-x-4 gap-y-2 text-sm sm:gap-x-5">
+      {
+        links.map(({ href, label }) => {
+          const isActive = href === '/' ? path === '/' : path.startsWith(href);
+          return (
+            <li>
+              <a
+                href={href}
+                aria-current={isActive ? 'page' : undefined}
+                class:list={[
+                  'transition-colors hover:text-slate-900 dark:hover:text-slate-100',
+                  isActive
+                    ? 'font-medium text-slate-900 dark:text-slate-100'
+                    : 'text-slate-500 dark:text-slate-400',
+                ]}
+              >
+                {label}
+              </a>
+            </li>
+          );
+        })
+      }
+    </ul>
+    </nav>
+
+    <ThemeToggle />
+  </div>
+</header>
+
+<style>
+  /* The mark inverts between themes: a dark plate would disappear against the
+     dark page background, so the two colours swap rather than staying fixed.
+     The favicon does not do this - a browser tab is not the page. */
+  .plate {
+    fill: rgb(15 23 42);
+  }
+
+  .mark {
+    fill: rgb(248 250 252);
+  }
+
+  .logo {
+    display: inline-flex;
+    border-radius: 0.875rem;
+    transition: opacity 150ms ease;
+  }
+
+  .logo:hover {
+    opacity: 0.8;
+  }
+
+  .logo:focus-visible {
+    outline: 2px solid rgb(100 116 139);
+    outline-offset: 3px;
+  }
+  :global([data-theme='dark']) .plate {
+    fill: rgb(241 245 249);
+  }
+  :global([data-theme='dark']) .mark {
+    fill: rgb(15 23 42);
+  }
+</style>

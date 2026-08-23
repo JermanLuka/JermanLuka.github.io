@@ -1,0 +1,40 @@
+---
+// Makes every image inside rendered markdown clickable, opening the full-size
+// file in a new tab.
+//
+// This is done in the browser rather than in the markdown because Astro only
+// rewrites image paths inside `![]()` syntax. A markdown link wrapped around an
+// image keeps its raw relative path and would 404 in the build output, so the
+// href has to be taken from the <img> after Astro has resolved it.
+---
+
+<script>
+  for (const image of document.querySelectorAll('.prose img')) {
+    // Leave anything that is already a link alone.
+    if (image.closest('a')) continue;
+
+    const link = document.createElement('a');
+    link.href = image.src;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+    link.className = 'prose-image-link';
+
+    image.replaceWith(link);
+    link.append(image);
+  }
+</script>
+
+<style is:global>
+  /* Only shown once the script has run, so a no-JS reader never sees a cursor
+     promising a click that does nothing. */
+  .prose-image-link {
+    display: block;
+    cursor: zoom-in;
+  }
+
+  .prose-image-link:focus-visible {
+    outline: 2px solid rgb(100 116 139);
+    outline-offset: 4px;
+    border-radius: 0.75rem;
+  }
+</style>

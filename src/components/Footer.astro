@@ -1,0 +1,36 @@
+---
+const year = new Date().getFullYear();
+
+const socials = [
+  { href: 'https://github.com/JermanLuka', label: 'GitHub' },
+  {
+    href: 'https://www.linkedin.com/in/luka-jerman-12046442b/',
+    label: 'LinkedIn',
+  },
+  { href: '/contact', label: 'Contact' },
+  { href: '/rss.xml', label: 'RSS' },
+];
+---
+
+<footer
+  class="flex flex-wrap items-center justify-between gap-4 border-t border-slate-200 py-6 text-sm text-slate-500 dark:border-slate-800 dark:text-slate-400"
+>
+  <p>&copy; {year} Luka Jerman</p>
+
+  <ul class="flex gap-4">
+    {
+      socials.map(({ href, label }) => (
+        <li>
+          <a
+            href={href}
+            target={href.startsWith('http') ? '_blank' : undefined}
+            rel={href.startsWith('http') ? 'me noopener noreferrer' : undefined}
+            class="transition-colors hover:text-slate-900 dark:hover:text-slate-100"
+          >
+            {label}
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</footer>

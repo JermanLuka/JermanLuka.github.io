@@ -1,1 +1,40 @@
 @import "tailwindcss";
+
+/* Dark mode is driven by a `data-theme` attribute on <html> rather than by
+   `prefers-color-scheme`, so a person can override what their OS says. The
+   inline script in Layout.astro sets that attribute before the page paints,
+   resolving "system" into a real value, which is why no CSS here needs to
+   consult the media query at all. */
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+/* Styles the HTML that markdown compiles to - headings, lists, code, links.
+   Tailwind's reset strips all of that, so rendered posts need it back. */
+@plugin "@tailwindcss/typography";
+
+/* The tag filter hides cards with the `hidden` attribute, which needs to beat
+   any display utility sitting on the same element. */
+@layer base {
+  [hidden] {
+    display: none !important;
+  }
+}
+
+/* Screenshots have their own white background, so without a border they bleed
+   into the page. The rule also keeps a dark-mode screenshot from floating. */
+.prose :where(img) {
+  border-radius: 0.75rem;
+  border: 1px solid rgb(226 232 240);
+}
+
+[data-theme="dark"] .prose :where(img) {
+  border-color: rgb(30 41 59);
+}
+
+/* Markdown tables can be wider than the 42rem content column. Let them scroll
+   inside themselves rather than pushing the whole page sideways. */
+.prose :where(table) {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+}

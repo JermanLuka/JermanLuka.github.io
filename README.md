@@ -1,43 +1,56 @@
-# Astro Starter Kit: Minimal
+# jermanluka.github.io
+
+My personal site: a CV, a project showcase, and a blog. Built from scratch rather
+than from a template, because the point was to understand every piece of it.
+
+Live at **https://jermanluka.github.io**
+
+## Stack
+
+- [Astro](https://astro.build) - static site generator, ships no JavaScript by default
+- [Tailwind CSS](https://tailwindcss.com) v4, via `@tailwindcss/vite`
+- GitHub Pages, deployed by GitHub Actions on every push to `main`
+
+The whole site is static HTML. The only client-side JavaScript is a few hundred
+bytes: the tag filter on the project and blog lists, and a script that makes
+images in posts clickable.
+
+## Running it
 
 ```sh
-npm create astro@latest -- --template minimal
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # output in dist/
+npm run preview  # serve the built site
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+Requires Node 22 or newer.
 
-## 🚀 Project Structure
+## Adding content
 
-Inside of your Astro project, you'll see the following folders and files:
+Projects and posts are markdown files. Drop one in the right folder and it
+appears on the site - no code changes.
 
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+- **A project:** `src/content/projects/<slug>.md`
+- **A post:** `src/content/blog/<slug>.md`
+
+Frontmatter is validated at build time by the schemas in `src/content.config.ts`,
+so a missing or misspelled field fails the build rather than rendering wrong.
+Setting `draft: true` hides an entry in production while leaving it visible in
+`npm run dev`.
+
+Posts can belong to a series with `series:` and `part:`, which links the
+instalments together automatically. A project naming that same series in its
+`devlog:` field lists them on its own page.
+
+## Layout
+
 ```
-
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
-
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
-
-Any static assets, like images, can be placed in the `public/` directory.
-
-## 🧞 Commands
-
-All commands are run from the root of the project, from a terminal:
-
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
-
-## 👀 Want to learn more?
-
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+src/
+  components/     reusable markup (header, footer, cards, tag filter)
+  content/        markdown: blog posts and projects
+  layouts/        the page shell: head tags, header, footer
+  lib/            CV data, skill logos, date helpers
+  pages/          routes; [...slug].astro files generate one page per entry
+  styles/         global.css - Tailwind entry point plus a few overrides
+```

@@ -1,0 +1,123 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  /** Short right-aligned label: a status, or a date. */
+  meta?: string;
+  /** ISO date, when `meta` is a date. Renders a <time> element instead of a span. */
+  datetime?: string;
+  summary: string;
+  tags?: string[];
+  /** Small label above the title, e.g. "Client work". */
+  badge?: string;
+  /**
+   * What the tag filter matches against. Defaults to the visible tags; pass
+   * this to make a card filterable by something it does not display.
+   */
+  filterValues?: string[];
+}
+
+const {
+  href,
+  title,
+  meta,
+  datetime,
+  summary,
+  tags = [],
+  badge,
+  filterValues,
+} = Astro.props;
+
+const filterKey = (filterValues ?? tags).join('|');
+---
+
+<li class="card" data-tags={filterKey}>
+  <a
+    href={href}
+    class="block rounded-xl border border-slate-200 p-5 dark:border-slate-800"
+  >
+    {
+      badge && (
+        <p class="mb-2 text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+          {badge}
+        </p>
+      )
+    }
+
+    <div class="flex items-baseline justify-between gap-x-4">
+      <h3 class="title min-w-0 font-medium text-slate-900 dark:text-slate-100">
+        {title}
+      </h3>
+
+      {
+        meta &&
+          (datetime ? (
+            <time
+              datetime={datetime}
+              class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400"
+            >
+              {meta}
+            </time>
+          ) : (
+            <span class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+              {meta}
+            </span>
+          ))
+      }
+    </div>
+
+    <p class="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">
+      {summary}
+    </p>
+
+    {
+      tags.length > 0 && (
+        <ul class="mt-4 flex flex-wrap gap-2">
+          {tags.map((tag) => (
+            <li class="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
+              {tag}
+            </li>
+          ))}
+        </ul>
+      )
+    }
+  </a>
+</li>
+
+<style>
+  .card > a {
+    transition:
+      border-color 150ms ease,
+      transform 150ms ease,
+      box-shadow 150ms ease;
+  }
+
+  .card > a:hover {
+    border-color: rgb(148 163 184);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 24px -18px rgb(15 23 42 / 0.6);
+  }
+
+  .card > a:hover .title {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    text-decoration-color: rgb(148 163 184);
+  }
+
+  /* Keyboard users get the same affordance as the hover state. */
+  .card > a:focus-visible {
+    outline: 2px solid rgb(100 116 139);
+    outline-offset: 2px;
+  }
+  :global([data-theme='dark']) .card > a:hover {
+    border-color: rgb(71 85 105);
+    box-shadow: 0 10px 24px -18px rgb(0 0 0 / 0.9);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .card > a,
+    .card > a:hover {
+      transform: none;
+    }
+  }
+</style>

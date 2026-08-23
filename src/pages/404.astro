@@ -1,0 +1,49 @@
+---
+// GitHub Pages serves this automatically for any path that does not exist.
+import Layout from '../layouts/Layout.astro';
+
+const linkClass =
+  'underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-slate-600 dark:decoration-slate-700 dark:hover:decoration-slate-400';
+
+const elsewhere = [
+  { href: '/cv', label: 'CV', note: 'Where I have worked and what I work with.' },
+  {
+    href: '/projects',
+    label: 'Projects',
+    note: 'Things I have built, including a game in development.',
+  },
+  { href: '/blog', label: 'Blog', note: 'Notes on what I am building.' },
+  { href: '/contact', label: 'Contact', note: 'How to reach me.' },
+];
+---
+
+<Layout
+  title="Page not found - Luka Jerman"
+  description="That page does not exist."
+>
+  <p class="text-sm font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
+    404
+  </p>
+
+  <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+    That page does not exist
+  </h1>
+
+  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
+    The link may be out of date, or I may have moved something. Either way,
+    here is everything that does exist:
+  </p>
+
+  <ul class="mt-8 space-y-4">
+    {
+      elsewhere.map(({ href, label, note }) => (
+        <li>
+          <a href={href} class={`font-medium ${linkClass}`}>
+            {label}
+          </a>
+          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{note}</p>
+        </li>
+      ))
+    }
+  </ul>
+</Layout>

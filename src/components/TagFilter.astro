@@ -1,0 +1,142 @@
+---
+// Client-side filter. Renders nothing useful without JavaScript, so the buttons
+// stay hidden until the script runs - with JS off every entry is simply
+// visible, which is the correct fallback.
+//
+// It filters whatever is inside [data-filter-list] on the same page, matching
+// each button's value against the item's data-tags attribute.
+//
+// Options arrive as groups so unrelated axes (who it was for, what it uses) get
+// a visual break between them instead of running together in one row.
+
+export type FilterOption = { value: string; label: string };
+
+interface Props {
+  groups: FilterOption[][];
+  label?: string;
+}
+
+const { groups, label = 'Filter entries' } = Astro.props;
+
+const populated = groups.filter((group) => group.length > 0);
+const total = populated.reduce((sum, group) => sum + group.length, 0);
+---
+
+{
+  total > 1 && (
+    <div
+      data-filter
+      hidden
+      class="flex flex-wrap items-center gap-2"
+      role="group"
+      aria-label={label}
+    >
+      <button type="button" class="chip" data-tag="" aria-pressed="true">
+        All
+      </button>
+
+      {populated.map((group, index) => (
+        <>
+          {index > 0 && <span aria-hidden="true" class="divider" />}
+          {group.map((option) => (
+            <button
+              type="button"
+              class="chip"
+              data-tag={option.value}
+              aria-pressed="false"
+            >
+              {option.label}
+            </button>
+          ))}
+        </>
+      ))}
+    </div>
+  )
+}
+
+<script>
+  const filter = document.querySelector('[data-filter]');
+  const list = document.querySelector('[data-filter-list]');
+  const empty = document.querySelector('[data-filter-empty]');
+
+  if (filter && list) {
+    // Only reveal the controls once we know they will work.
+    filter.hidden = false;
+
+    const buttons = Array.from(filter.querySelectorAll('button[data-tag]'));
+    const items = Array.from(list.querySelectorAll('[data-tags]'));
+
+    filter.addEventListener('click', (event) => {
+      const button = event.target.closest('button[data-tag]');
+      if (!button) return;
+
+      const active = button.dataset.tag || '';
+      for (const other of buttons) {
+        other.setAttribute('aria-pressed', String(other === button));
+      }
+
+      let shown = 0;
+      for (const item of items) {
+        const itemTags = (item.dataset.tags || '').split('|');
+        const show = active === '' || itemTags.includes(active);
+        item.hidden = !show;
+        if (show) shown += 1;
+      }
+
+      if (empty) empty.hidden = shown > 0;
+    });
+  }
+</script>
+
+<style>
+  .chip {
+    border-radius: 9999px;
+    border: 1px solid rgb(226 232 240);
+    padding: 0.25rem 0.75rem;
+    font-size: 0.8125rem;
+    color: rgb(100 116 139);
+    cursor: pointer;
+    transition:
+      border-color 150ms ease,
+      color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .chip:hover {
+    border-color: rgb(148 163 184);
+    color: rgb(15 23 42);
+  }
+
+  .chip[aria-pressed='true'] {
+    background-color: rgb(15 23 42);
+    border-color: rgb(15 23 42);
+    color: rgb(248 250 252);
+  }
+
+  .chip:focus-visible {
+    outline: 2px solid rgb(100 116 139);
+    outline-offset: 2px;
+  }
+
+  .divider {
+    width: 1px;
+    height: 1.25rem;
+    background-color: rgb(226 232 240);
+  }
+  :global([data-theme='dark']) .chip {
+    border-color: rgb(30 41 59);
+    color: rgb(148 163 184);
+  }
+  :global([data-theme='dark']) .chip:hover {
+    border-color: rgb(71 85 105);
+    color: rgb(241 245 249);
+  }
+  :global([data-theme='dark']) .chip[aria-pressed='true'] {
+    background-color: rgb(241 245 249);
+    border-color: rgb(241 245 249);
+    color: rgb(15 23 42);
+  }
+  :global([data-theme='dark']) .divider {
+    background-color: rgb(30 41 59);
+  }
+</style>

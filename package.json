@@ -1,5 +1,5 @@
 {
-  "name": "shaky-satellite",
+  "name": "personal-site",
   "type": "module",
   "version": "0.0.1",
   "engines": {
@@ -12,8 +12,14 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.4",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "@tailwindcss/typography": "^0.5.20",
+    "simple-icons": "^16.28.0"
   }
 }

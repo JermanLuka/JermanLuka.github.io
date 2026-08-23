@@ -1,0 +1,85 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import EntryCard from '../../components/EntryCard.astro';
+import TagFilter from '../../components/TagFilter.astro';
+
+const projects = (
+  await getCollection('projects', ({ data }) =>
+    import.meta.env.PROD ? !data.draft : true,
+  )
+).sort((a, b) => a.data.order - b.data.order);
+
+// Filtering a single project is pointless, so the controls only appear once
+// there is something to narrow down.
+const tags =
+  projects.length > 1
+    ? [...new Set(projects.flatMap((p) => p.data.tags))].sort((a, b) =>
+        a.localeCompare(b),
+      )
+    : [];
+
+// The client/personal chips are only worth showing when both kinds exist.
+const kinds = new Set(projects.map((p) => p.data.kind));
+const kindOptions =
+  kinds.size > 1
+    ? [
+        { value: 'kind:client', label: 'Client work' },
+        { value: 'kind:personal', label: 'Personal' },
+      ]
+    : [];
+
+const groups = [
+  kindOptions,
+  tags.map((tag) => ({ value: tag, label: tag })),
+];
+---
+
+<Layout
+  title="Projects - Luka Jerman"
+  description="Things I have built, and things I am building."
+>
+  <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
+    Projects
+  </h1>
+
+  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
+    Things I've built and things I'm still building.
+  </p>
+
+  {
+    projects.length === 0 ? (
+      <p class="mt-10 rounded-md border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
+        Nothing here yet.
+      </p>
+    ) : (
+      <>
+        <div class="mt-8">
+          <TagFilter groups={groups} label="Filter projects" />
+        </div>
+
+        <ul data-filter-list class="mt-6 space-y-4">
+          {projects.map((project) => (
+            <EntryCard
+              href={`/projects/${project.id}`}
+              title={project.data.title}
+              meta={project.data.status}
+              badge={project.data.kind === 'client' ? 'Client work' : undefined}
+              summary={project.data.summary}
+              tags={project.data.tags}
+              filterValues={[`kind:${project.data.kind}`, ...project.data.tags]}
+            />
+          ))}
+        </ul>
+
+        <p
+          data-filter-empty
+          hidden
+          class="mt-6 rounded-md border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400"
+        >
+          No projects with that tag.
+        </p>
+      </>
+    )
+  }
+</Layout>
