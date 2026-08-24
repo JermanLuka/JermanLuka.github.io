@@ -30,6 +30,9 @@ const socialImage = new URL('/og-image.png', Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    {/* Google reads a raster icon for the favicon beside a search result, and
+        requires a square multiple of 48px - it will not use the 32. */}
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="canonical" href={canonical} />
 
