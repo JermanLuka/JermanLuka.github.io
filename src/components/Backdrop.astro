@@ -132,6 +132,11 @@ const bolts = specs.map((spec) => ({
   timing:
     `--tint:${spec.tint};animation-duration:${spec.duration.toFixed(2)}s;` +
     `animation-delay:${spec.delay.toFixed(2)}s`,
+  // Handed to the script below so it can recompute the delays against the
+  // clock. `phase` is the scatter that keeps the bolts from striking together,
+  // expressed as a positive offset into the cycle.
+  duration: spec.duration.toFixed(2),
+  phase: (-spec.delay).toFixed(2),
   segments: generateBolt(spec).map((seg) => ({
     ...seg,
     // Forks wait until the main channel has crawled past their origin.
@@ -153,7 +158,12 @@ const bolts = specs.map((spec) => ({
   >
     {
       bolts.map((bolt) => (
-        <g class="bolt" style={bolt.timing}>
+        <g
+          class="bolt"
+          style={bolt.timing}
+          data-duration={bolt.duration}
+          data-phase={bolt.phase}
+        >
           {/* Wide, blurred, coloured halo. */}
           <g class="halo">
             {bolt.segments.map((seg) => (
@@ -162,6 +172,7 @@ const bolts = specs.map((spec) => ({
                 pathLength="1"
                 stroke-width={(seg.width * 4).toFixed(2)}
                 style={seg.timing}
+                data-offset={seg.start.toFixed(4)}
               />
             ))}
           </g>
@@ -174,6 +185,7 @@ const bolts = specs.map((spec) => ({
                 pathLength="1"
                 stroke-width={seg.width.toFixed(2)}
                 style={seg.timing}
+                data-offset={seg.start.toFixed(4)}
               />
             ))}
           </g>
@@ -182,6 +194,43 @@ const bolts = specs.map((spec) => ({
     }
   </svg>
 </div>
+
+{/*
+  Anchors the animations to wall-clock time instead of page-load time.
+
+  Every navigation is a fresh document, so the SVG is rebuilt and its CSS
+  animations start from frame zero - a bolt caught mid-strike snaps back to
+  nothing. Deriving each delay from the clock instead means the storm is a
+  function of *when you are*, not *when the page loaded*, so a rebuilt SVG
+  picks up exactly where the previous page left off.
+
+  `is:inline` because this must run before the first paint; a bundled module
+  script is deferred and would let one frame of the reset state through.
+  Without JavaScript the baked-in delays still apply and the storm still runs -
+  it just restarts on navigation, which is the behaviour we had before.
+*/}
+<script is:inline>
+  (() => {
+    const now = Date.now() / 1000;
+
+    for (const bolt of document.querySelectorAll('.backdrop .bolt')) {
+      const duration = Number(bolt.dataset.duration);
+      if (!duration) continue;
+
+      // Where this bolt sits in its own cycle right now. The stored phase is
+      // the per-bolt scatter that stops them striking in unison.
+      const delay = -((now + Number(bolt.dataset.phase)) % duration);
+      bolt.style.animationDelay = `${delay.toFixed(2)}s`;
+
+      // Forks keep their stagger behind the main channel, measured from the
+      // group's new delay rather than from zero.
+      for (const path of bolt.querySelectorAll('path')) {
+        const offset = Number(path.dataset.offset) * duration;
+        path.style.animationDelay = `${(delay + offset).toFixed(2)}s`;
+      }
+    }
+  })();
+</script>
 
 <style>
   /* Content sits in a centred max-w-2xl (42rem) column. Mask that band out of
