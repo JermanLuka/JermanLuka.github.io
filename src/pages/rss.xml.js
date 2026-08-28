@@ -11,11 +11,12 @@ export async function GET(context) {
     title: 'Luka Jerman',
     description: 'Notes on what I am building and learning.',
     site: context.site,
+    trailingSlash: false,
     items: posts.map((post) => ({
       title: post.data.title,
       pubDate: post.data.date,
       description: post.data.summary,
-      link: `/blog/${post.id}/`,
+      link: `/blog/${post.id}`,
       categories: post.data.tags,
     })),
   });

@@ -17,7 +17,10 @@ const {
   article,
 } = Astro.props;
 
-const canonical = new URL(Astro.url.pathname, Astro.site);
+// build.format is 'file', so pathname is '/cv.html' at build time. Strip the
+// extension so the canonical matches the extensionless URL we link and index.
+const cleanPath = Astro.url.pathname.replace(/(?:index)?\.html$/, '') || '/';
+const canonical = new URL(cleanPath, Astro.site);
 const socialImage = new URL('/og-image.png', Astro.site);
 ---
 
