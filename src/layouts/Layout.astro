@@ -7,6 +7,7 @@ import { accents, defaultAccent } from '../lib/accents';
 import Aurora from '../components/Aurora.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import Toast from '../components/Toast.astro';
 
 interface Props {
   title?: string;
@@ -115,5 +116,8 @@ const socialImage = new URL('/og-image.png', Astro.site);
       </main>
       <Footer />
     </div>
+    {/* Outside the wrapper on purpose: a fixed element inside a frosted
+        .glass panel would be pinned to that panel instead of the screen. */}
+    <Toast />
   </body>
 </html>

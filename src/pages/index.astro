@@ -4,10 +4,12 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostRow from '../components/PostRow.astro';
+import CopyEmail from '../components/CopyEmail.astro';
 import portrait from '../assets/portrait.jpg';
 import { skillLogos } from '../lib/skills';
 import { experience, yearsOfExperience } from '../lib/cv';
 import { formatDate, isoDate } from '../lib/date';
+import { email } from '../lib/contact';
 
 const current = experience[0];
 
@@ -33,8 +35,6 @@ const posts = (
 )
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
   .slice(0, 3);
-
-const email = 'hi@lukajerman.dev';
 
 const profiles = [
   { href: 'https://github.com/JermanLuka', label: 'GitHub' },
@@ -258,12 +258,22 @@ const external = (href: string) =>
       </p>
 
       <div class="relative mt-10 flex flex-wrap justify-center gap-3">
-        <a
-          href={`mailto:${email}`}
-          class="rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white glow-button transition hover:bg-accent-600"
-        >
+        <CopyEmail class="inline-flex items-center gap-2 rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white glow-button transition hover:bg-accent-600">
           {email}
-        </a>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.75"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            class="size-4 opacity-80"
+          >
+            <rect x="9" y="9" width="12" height="12" rx="2" />
+            <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+          </svg>
+        </CopyEmail>
         {
           profiles.map(({ href, label }) => (
             <a
