@@ -1,6 +1,10 @@
 ---
+// Self-hosted through Fontsource, so no font is requested from Google.
+import '@fontsource/anton';
+import '@fontsource-variable/inter';
 import '../styles/global.css';
-import Backdrop from '../components/Backdrop.astro';
+import { accents, defaultAccent } from '../lib/accents';
+import Aurora from '../components/Aurora.astro';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 
@@ -9,13 +13,26 @@ interface Props {
   description?: string;
   /** Set on blog posts so link previews and search engines treat them as articles. */
   article?: { published: Date };
+  /**
+   * How wide the content column is. 'narrow' suits reading (posts, project
+   * write ups), 'wide' suits grids, and 'full' hands the page the whole width
+   * to lay out its own sections (the home page).
+   */
+  width?: 'narrow' | 'wide' | 'full';
 }
 
 const {
   title = 'Luka Jerman',
-  description = 'Personal site of Luka Jerman - projects, writing, and what I am building.',
+  description = 'Personal site of Luka Jerman: projects, writing, and what I am building.',
   article,
+  width = 'narrow',
 } = Astro.props;
+
+const column = {
+  narrow: 'mx-auto w-full max-w-3xl px-5 pt-14 pb-24 sm:px-6 sm:pt-20',
+  wide: 'mx-auto w-full max-w-6xl px-5 pt-14 pb-24 sm:px-6 sm:pt-20',
+  full: '',
+}[width];
 
 // build.format is 'file', so pathname is '/cv.html' at build time. Strip the
 // extension so the canonical matches the extensionless URL we link and index.
@@ -25,9 +42,9 @@ const socialImage = new URL('/og-image.png', Astro.site);
 ---
 
 <!doctype html>
-{/* Rendered dark so the default holds without JavaScript; the inline script
-    below swaps it to light for anyone who chose that. */}
-<html lang="en" data-theme="dark" style="color-scheme: dark">
+{/* The design is dark only, so tell the browser: scrollbars and form
+    controls then match without any per-element styling. */}
+<html lang="en" style="color-scheme: dark">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -69,31 +86,31 @@ const socialImage = new URL('/og-image.png', Astro.site);
     <meta name="twitter:card" content="summary_large_image" />
 
     {/*
-      Runs before the body is parsed, on purpose. If the theme were applied
-      after paint, a person who chose dark would get a white flash on every
-      navigation. `is:inline` keeps Astro from hoisting it into the bundled
-      module scripts, which are deferred and would arrive too late.
+      Applies a saved accent before the body is parsed, on purpose. Run any
+      later and someone who chose blue would see a red flash on every
+      navigation. `define:vars` hands it the list of colours and also keeps it
+      inline, out of the deferred module scripts, which would arrive too late.
+      The default needs no attribute.
     */}
-    <script is:inline>
-      (() => {
-        // Dark is the design's default; light is the opt-out. The OS setting is
-        // deliberately not consulted, so the site looks the way it was designed
-        // to until someone says otherwise.
-        const theme = localStorage.getItem('theme') === 'light' ? 'light' : 'dark';
-        document.documentElement.dataset.theme = theme;
-        document.documentElement.style.colorScheme = theme;
-      })();
+    <script define:vars={{ choices: accents.map((accent) => accent.id), fallback: defaultAccent }}>
+      try {
+        const saved = localStorage.getItem('accent');
+        if (saved !== fallback && choices.includes(saved)) {
+          document.documentElement.dataset.accent = saved;
+        }
+      } catch {
+        // Storage blocked: stay on the default.
+      }
     </script>
   </head>
 
-  <body
-    class="bg-white text-slate-800 antialiased dark:bg-slate-950 dark:text-slate-200"
-  >
-    <Backdrop />
-
-    <div class="relative mx-auto flex min-h-screen max-w-2xl flex-col px-6">
+  <body class="bg-page font-body text-zinc-300 antialiased selection:bg-accent-600/50 selection:text-white">
+    {/* overflow-x-clip trims the background glows at the screen edge without
+        turning this into a scroll container, which would break the sticky header. */}
+    <div class="relative isolate flex min-h-screen flex-col overflow-x-clip">
+      <Aurora />
       <Header />
-      <main class="flex-1 py-14">
+      <main class:list={['flex-1', column]}>
         <slot />
       </main>
       <Footer />

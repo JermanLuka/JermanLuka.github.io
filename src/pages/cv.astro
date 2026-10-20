@@ -1,112 +1,119 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { education, experience, skills } from '../lib/cv';
+import PageHeading from '../components/PageHeading.astro';
+import { education, experience, intro, skills, yearsOfExperience } from '../lib/cv';
 
-const linkClass =
-  'underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-slate-600 dark:decoration-slate-700 dark:hover:decoration-slate-400';
+const years = yearsOfExperience();
+
+// Each section is a label column and a content column on wide screens, and
+// simply stacks on narrow ones.
+const sectionClass = 'mt-20 grid gap-6 lg:grid-cols-[13rem_1fr] lg:gap-12';
+const labelClass =
+  'font-display text-3xl tracking-[0.01em] text-white uppercase lg:sticky lg:top-24 lg:self-start';
+const chipClass = 'rounded-full bg-white/5 px-2.5 py-1 text-xs text-zinc-400';
 ---
 
 <Layout
-  title="CV - Luka Jerman"
+  title="CV · Luka Jerman"
   description="Experience, education, and what I work with."
+  width="wide"
 >
-  <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-    CV
-  </h1>
+  <PageHeading eyebrow="Curriculum vitae" title={`${years}+ years of production .NET`}>
+    <p>
+      Software engineering across vessel monitoring, ERP, and enterprise
+      document management.
+    </p>
+  </PageHeading>
 
-  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
-    Four years of software engineering across vessel monitoring, ERP, and
-    enterprise document management. The short version is on the <a href="/" class={linkClass}>home page</a>.
-  </p>
+  <section class={sectionClass}>
+    <h2 class={labelClass}>About</h2>
+    <div class="max-w-3xl space-y-5 text-lg leading-relaxed text-zinc-300">
+      {intro.map((paragraph) => <p>{paragraph}</p>)}
+    </div>
+  </section>
 
-  <section class="mt-14">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-      Experience
-    </h2>
+  <section class={sectionClass}>
+    <h2 class={labelClass}>Experience</h2>
 
-    <ol class="mt-6 space-y-12">
+    <ol class="space-y-5">
       {
-        experience.map((job) => (
-          <li>
-            <div class="flex items-baseline justify-between gap-x-4">
-              <h3 class="min-w-0 font-medium text-slate-900 dark:text-slate-100">
-                {job.role} &middot; {job.org}
-              </h3>
-              <span class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
+        experience.map((job, index) => (
+          <li class="glass rounded-3xl p-6 sm:p-8">
+            <div class="flex flex-wrap items-start justify-between gap-x-6 gap-y-3">
+              <div>
+                <h3 class="font-display text-3xl tracking-[0.01em] text-white uppercase">{job.org}</h3>
+                <p class="mt-1 text-sm text-zinc-400">
+                  {job.role} &middot; {job.focus}
+                </p>
+              </div>
+              <p
+                class:list={[
+                  'inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold whitespace-nowrap ring-1',
+                  index === 0
+                    ? 'bg-accent-500/10 text-accent-300 ring-accent-500/25'
+                    : 'bg-white/5 text-zinc-300 ring-white/10',
+                ]}
+              >
+                {index === 0 && <span class="size-1.5 rounded-full bg-dot" />}
                 {job.period}
-              </span>
+              </p>
             </div>
 
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {job.focus}
-            </p>
+            <p class="mt-5 leading-relaxed text-zinc-300">{job.blurb}</p>
 
-            <p class="mt-3 leading-relaxed text-slate-600 dark:text-slate-400">
-              {job.blurb}
-            </p>
-
-            <ul class="mt-4 list-disc space-y-2 pl-5 leading-relaxed text-slate-600 dark:text-slate-400">
+            <ul class="mt-5 space-y-3 leading-relaxed text-zinc-400">
               {job.notes.map((note) => (
-                <li>{note}</li>
-              ))}
-            </ul>
-
-            <ul class="mt-4 flex flex-wrap gap-2">
-              {job.stack.map((item) => (
-                <li class="rounded-full border border-slate-200 px-2.5 py-0.5 text-xs text-slate-500 dark:border-slate-800 dark:text-slate-400">
-                  {item}
+                <li class="relative pl-5">
+                  <span aria-hidden="true" class="absolute top-[0.7em] left-0 size-1.5 rounded-full bg-dot/80" />
+                  {note}
                 </li>
               ))}
             </ul>
+
+            <ul class="mt-6 flex flex-wrap gap-2">
+              {job.stack.map((item) => (
+                <li class={chipClass}>{item}</li>
+              ))}
+            </ul>
           </li>
         ))
       }
     </ol>
   </section>
 
-  <section class="mt-14">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-      Education
-    </h2>
+  <section class={sectionClass}>
+    <h2 class={labelClass}>Education</h2>
 
-    <ol class="mt-6 space-y-6">
+    <ol class="grid gap-5 md:grid-cols-2">
       {
         education.map((item) => (
-          <li>
-            <div class="flex items-baseline justify-between gap-x-4">
-              <h3 class="min-w-0 font-medium text-slate-900 dark:text-slate-100">
-                {item.what}
-              </h3>
-              <span class="shrink-0 whitespace-nowrap text-sm text-slate-500 dark:text-slate-400">
-                {item.period}
-              </span>
-            </div>
-            <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">
-              {item.org}
-            </p>
-            <p class="mt-2 leading-relaxed text-slate-600 dark:text-slate-400">
-              {item.note}
-            </p>
+          <li class="glass rounded-3xl p-6 sm:p-8">
+            <p class="text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">{item.period}</p>
+            <h3 class="mt-3 font-semibold text-white">{item.what}</h3>
+            <p class="mt-1 text-sm text-zinc-400">{item.org}</p>
+            <p class="mt-4 leading-relaxed text-zinc-400">{item.note}</p>
           </li>
         ))
       }
     </ol>
   </section>
 
-  <section class="mt-14">
-    <h2 class="text-sm font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
-      Skills
-    </h2>
+  <section class={sectionClass}>
+    <h2 class={labelClass}>Skills</h2>
 
-    <dl class="mt-6 space-y-4">
+    <dl class="grid gap-5 sm:grid-cols-2">
       {
         skills.map((skill) => (
-          <div class="sm:flex sm:gap-6">
-            <dt class="w-28 shrink-0 font-medium text-slate-900 dark:text-slate-100">
-              {skill.group}
-            </dt>
-            <dd class="text-slate-600 dark:text-slate-400">
-              {skill.items.join(', ')}
+          <div class="glass rounded-3xl p-6">
+            <dt class="text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">{skill.group}</dt>
+            <dd class="mt-4">
+              <ul class="flex flex-wrap gap-2">
+                {skill.items.map((item) => (
+                  <li class="rounded-full border border-white/10 bg-white/[0.03] px-3 py-1.5 text-sm text-zinc-200">
+                    {item}
+                  </li>
+                ))}
+              </ul>
             </dd>
           </div>
         ))

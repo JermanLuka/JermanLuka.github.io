@@ -1,0 +1,195 @@
+---
+// Dropdown for the site's accent colour. The colours come from
+// src/lib/accents.ts; the choice is stored in localStorage and applied by the
+// inline script in Layout.astro before the page paints, so it holds across
+// pages and visits.
+//
+// The trigger's swatch and name are drawn by CSS from the accent variables,
+// not set by the script, so they are already right on first paint. Every copy
+// on the page stays in step, so the header and footer versions never disagree.
+import { accents } from '../lib/accents';
+
+interface Props {
+  /**
+   * Which way the list opens. 'below' for the header, where it hangs down
+   * from the right corner; 'above' for the footer, where there is no room
+   * underneath.
+   */
+  position?: 'below' | 'above';
+  /**
+   * Hide the colour's name below 768px and show only the swatch. The header
+   * needs this: a long name like ".NET purple" pushes it past the screen edge
+   * on small tablets.
+   */
+  compact?: boolean;
+}
+
+const { position = 'below', compact = false } = Astro.props;
+---
+
+<div data-accent-menu class="relative">
+  <button
+    type="button"
+    data-accent-trigger
+    aria-expanded="false"
+    aria-label="Accent colour"
+    title="Accent colour"
+    class="trigger glass inline-flex h-8 items-center gap-2 rounded-full pr-2.5 pl-3 text-sm whitespace-nowrap text-zinc-300 transition hover:text-white"
+  >
+    <span aria-hidden="true" class="size-2.5 shrink-0 rounded-full bg-accent-600 shadow-[0_0_10px_-1px_var(--color-accent-600)]"></span>
+    <span aria-hidden="true" class:list={['name', compact && 'hidden md:inline']}></span>
+    <svg viewBox="0 0 16 16" aria-hidden="true" class="chevron size-3.5 shrink-0 text-zinc-500">
+      <path d="m4 6 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
+    </svg>
+  </button>
+
+  <div
+    data-accent-panel
+    hidden
+    class:list={[
+      'absolute z-50 w-44 rounded-2xl border border-white/10 bg-page p-1.5 shadow-xl shadow-black/50',
+      position === 'below' ? 'top-full right-0 mt-2' : 'bottom-full left-0 mb-2',
+    ]}
+  >
+    <p class="px-3 pt-1.5 pb-1 text-[0.6875rem] font-semibold tracking-[0.14em] text-zinc-500 uppercase">Accent</p>
+    <ul>
+      {
+        accents.map(({ id, label, swatch }) => (
+          <li>
+            <button
+              type="button"
+              data-accent-option={id}
+              aria-pressed="false"
+              class="option flex w-full items-center gap-3 rounded-xl px-3 py-2 text-left text-sm text-zinc-300 transition hover:bg-white/5 hover:text-white"
+            >
+              {/* Literal colour on purpose: each swatch names its option, so
+                  it must not follow the active accent. */}
+              <span aria-hidden="true" class="size-2.5 shrink-0 rounded-full" style={`background-color:${swatch}`} />
+              <span class="flex-1">{label}</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true" class="check size-3.5 text-white">
+                <path d="m3.5 8.5 3 3 6-7" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </button>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</div>
+
+<script>
+  import { accents, defaultAccent, type AccentId } from '../lib/accents';
+
+  const root = document.documentElement;
+  const menus = document.querySelectorAll<HTMLElement>('[data-accent-menu]');
+
+  const known = (value: string | undefined): value is AccentId =>
+    accents.some((accent) => accent.id === value);
+
+  function current(): AccentId {
+    const value = root.dataset.accent;
+    return known(value) ? value : defaultAccent;
+  }
+
+  function apply(accent: AccentId) {
+    if (accent === defaultAccent) delete root.dataset.accent;
+    else root.dataset.accent = accent;
+
+    const label = accents.find((option) => option.id === accent)?.label;
+    for (const trigger of document.querySelectorAll('[data-accent-trigger]')) {
+      trigger.setAttribute('aria-label', `Accent colour: ${label}`);
+      trigger.setAttribute('title', `Accent colour: ${label}`);
+    }
+    for (const option of document.querySelectorAll<HTMLElement>('[data-accent-option]')) {
+      option.setAttribute('aria-pressed', String(option.dataset.accentOption === accent));
+    }
+  }
+
+  function setOpen(menu: HTMLElement, open: boolean) {
+    menu.querySelector('[data-accent-trigger]')?.setAttribute('aria-expanded', String(open));
+    const panel = menu.querySelector<HTMLElement>('[data-accent-panel]');
+    if (panel) panel.hidden = !open;
+  }
+
+  // The inline script in the head already applied the saved choice; read it
+  // back rather than deciding again, so the two can never disagree.
+  apply(current());
+
+  for (const menu of menus) {
+    const trigger = menu.querySelector<HTMLElement>('[data-accent-trigger]');
+    const panel = menu.querySelector<HTMLElement>('[data-accent-panel]');
+    if (!trigger || !panel) continue;
+
+    trigger.addEventListener('click', () => setOpen(menu, panel.hidden));
+
+    panel.addEventListener('click', (event) => {
+      const option = (event.target as Element).closest<HTMLElement>('[data-accent-option]');
+      const accent = option?.dataset.accentOption;
+      if (!known(accent)) return;
+
+      apply(accent);
+      // Storage can be blocked (private windows, strict cookie settings).
+      // The choice still applies to this page; it just won't be remembered.
+      try {
+        localStorage.setItem('accent', accent);
+      } catch {}
+
+      setOpen(menu, false);
+      trigger.focus();
+    });
+
+    menu.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape' && !panel.hidden) {
+        setOpen(menu, false);
+        trigger.focus();
+      }
+    });
+
+    // Tabbing past the list closes it. Only when focus actually lands somewhere
+    // else: Safari does not focus buttons on click, so a click inside the list
+    // reports no new target, and closing then would swallow the click.
+    menu.addEventListener('focusout', (event) => {
+      const next = event.relatedTarget as Node | null;
+      if (next && !menu.contains(next)) setOpen(menu, false);
+    });
+  }
+
+  // A click anywhere outside an open list closes it.
+  document.addEventListener('click', (event) => {
+    for (const menu of menus) {
+      if (!menu.contains(event.target as Node)) setOpen(menu, false);
+    }
+  });
+</script>
+
+<style>
+  /* Each accent block in global.css names itself in --accent-name, so the
+     button reads the right word before any script runs. */
+  .name::before {
+    content: var(--accent-name);
+  }
+
+  /* The panel only opens through the script, which sets aria-pressed first,
+     so the tick can simply follow it. */
+  .check {
+    visibility: hidden;
+  }
+
+  .option[aria-pressed='true'] .check {
+    visibility: visible;
+  }
+
+  .chevron {
+    transition: rotate 150ms ease;
+  }
+
+  .trigger[aria-expanded='true'] .chevron {
+    rotate: 180deg;
+  }
+
+  .trigger:focus-visible,
+  .option:focus-visible {
+    outline: 2px solid var(--color-accent-400);
+    outline-offset: 2px;
+  }
+</style>

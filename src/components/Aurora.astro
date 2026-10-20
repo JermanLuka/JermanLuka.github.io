@@ -1,0 +1,16 @@
+---
+// Ambient background: slow drifting colour pools behind the top of every page.
+// Decorative only, so it ignores the pointer and fades out before the content
+// further down. The outer box fills the page and clips, so on a short page the
+// glow is cut off instead of stretching the page to fit it.
+---
+
+<div aria-hidden="true" class="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+  <div class="fade-b absolute inset-x-0 top-0 h-[62rem]">
+    <div class="absolute top-[-14rem] left-0 size-[38rem] rounded-full bg-accent-800/20 blur-[120px] motion-safe:animate-drift-1"></div>
+    <div class="absolute top-[-8rem] left-[40%] size-[34rem] rounded-full bg-accent-950/50 blur-[120px] motion-safe:animate-drift-2"></div>
+    <div class="absolute top-[10rem] right-[-10rem] size-[30rem] rounded-full bg-aurora/15 blur-[120px] motion-safe:animate-drift-3"></div>
+    <div class="grid-lines absolute inset-0"></div>
+    <div class="grain absolute inset-0 opacity-[0.07] mix-blend-overlay"></div>
+  </div>
+</div>

@@ -1,5 +1,7 @@
 ---
+import { siGithub } from 'simple-icons';
 import Layout from '../layouts/Layout.astro';
+import PageHeading from '../components/PageHeading.astro';
 
 // A Cloudflare Email Routing alias, not a real mailbox. It forwards to my
 // personal inbox, which never appears on the site. If it ever attracts too much
@@ -14,42 +16,30 @@ const profiles = [
   },
   {
     label: 'LinkedIn',
-    value: 'luka-jerman',
+    value: 'Luka Jerman',
     href: 'https://www.linkedin.com/in/luka-jerman-12046442b/',
   },
 ];
 
-const linkClass =
-  'underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-slate-600 dark:decoration-slate-700 dark:hover:decoration-slate-400';
+const rowClass =
+  'group glass flex items-center gap-5 rounded-3xl p-5 transition hover:-translate-y-0.5 hover:border-accent-500/30 sm:p-6 motion-reduce:hover:translate-y-0';
+const iconClass =
+  'flex size-12 shrink-0 items-center justify-center rounded-2xl bg-white/5 text-white ring-1 ring-white/10';
 ---
 
 <Layout
-  title="Contact - Luka Jerman"
+  title="Contact · Luka Jerman"
   description="How to get in touch with Luka Jerman."
 >
-  <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-    Contact
-  </h1>
+  <PageHeading eyebrow="Contact" title="Get in touch">
+    <p>Email is the best way to reach me. I'm also on GitHub and LinkedIn.</p>
+  </PageHeading>
 
-  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
-    Email is the best way to reach me. I'm also on GitHub and LinkedIn.
-  </p>
-
-  <ul class="mt-10 space-y-6">
-    <li class="flex flex-wrap items-baseline gap-x-4">
-      <span class="w-20 shrink-0 text-sm text-slate-500 dark:text-slate-400">
-        Email
-      </span>
-      <span class="flex items-center gap-2">
-        <span>{email}</span>
-        <a
-          href={`mailto:${email}`}
-          aria-label={`Send an email to ${email}`}
-          title="Compose an email"
-          class="text-slate-400 transition-colors hover:text-slate-900 dark:text-slate-500 dark:hover:text-slate-100"
-        >
+  <ul class="mt-12 space-y-4">
+    <li>
+      <a href={`mailto:${email}`} class={rowClass}>
+        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent-700 text-white">
           <svg
-            xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -57,28 +47,38 @@ const linkClass =
             stroke-linecap="round"
             stroke-linejoin="round"
             aria-hidden="true"
-            class="h-4 w-4"
+            class="size-5"
           >
             <rect x="2" y="4" width="20" height="16" rx="2" />
             <path d="m2 7 10 6 10-6" />
           </svg>
-        </a>
-      </span>
+        </span>
+        <span class="min-w-0 flex-1">
+          <span class="block text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">Email</span>
+          <span class="mt-0.5 block truncate text-lg font-medium text-white">{email}</span>
+        </span>
+        <span aria-hidden="true" class="text-zinc-500 transition group-hover:translate-x-1 group-hover:text-white">→</span>
+      </a>
     </li>
 
     {
       profiles.map((profile) => (
-        <li class="flex flex-wrap items-baseline gap-x-4">
-          <span class="w-20 shrink-0 text-sm text-slate-500 dark:text-slate-400">
-            {profile.label}
-          </span>
-          <a
-            href={profile.href}
-            target="_blank"
-            rel="me noopener noreferrer"
-            class={linkClass}
-          >
-            {profile.value}
+        <li>
+          <a href={profile.href} target="_blank" rel="me noopener noreferrer" class={rowClass}>
+            <span class={iconClass}>
+              {profile.label === 'GitHub' ? (
+                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-5">
+                  <path d={siGithub.path} />
+                </svg>
+              ) : (
+                <span aria-hidden="true" class="text-base font-bold">in</span>
+              )}
+            </span>
+            <span class="min-w-0 flex-1">
+              <span class="block text-xs font-semibold tracking-[0.14em] text-zinc-500 uppercase">{profile.label}</span>
+              <span class="mt-0.5 block truncate text-lg font-medium text-white">{profile.value}</span>
+            </span>
+            <span aria-hidden="true" class="text-zinc-500 transition group-hover:text-white">↗</span>
           </a>
         </li>
       ))

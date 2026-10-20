@@ -5,7 +5,7 @@ kind: personal
 summary: This site. Astro and Tailwind, built from scratch and deployed to GitHub Pages via Actions, on a domain routed through Cloudflare.
 tags: ['Astro', 'Tailwind', 'GitHub Actions', 'Cloudflare']
 repo: https://github.com/JermanLuka/JermanLuka.github.io
-order: 2
+order: 3
 ---
 
 My first public site, built from nothing rather than from a template - the point

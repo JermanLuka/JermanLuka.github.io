@@ -2,10 +2,10 @@
 title: Relic of Ruin
 status: In development
 kind: personal
-summary: A single-player 3D RPG in Godot 4 and C#, with tab-target combat and a fixed 3/4 top-down camera, chasing the slow, deliberate weight of classic vanilla WoW rather than modern action-game speed.
+summary: A single player 3D RPG in Godot 4 and C#, with tab target combat and a fixed 3/4 top down camera, chasing the slow, deliberate weight of classic vanilla WoW rather than modern action game speed.
 tags: ['Godot', 'C#', '.NET', 'Game design']
 devlog: Relic of Ruin devlog
-order: 1
+order: 2
 draft: false
 ---
 

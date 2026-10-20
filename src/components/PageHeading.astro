@@ -1,0 +1,31 @@
+---
+// Top of every inner page: a small red label, the title in the display face,
+// and an optional lead paragraph passed as the slot.
+
+interface Props {
+  title: string;
+  /** Small label above the title, e.g. "Writing". */
+  eyebrow?: string;
+}
+
+const { title, eyebrow } = Astro.props;
+const hasLead = Astro.slots.has('default');
+---
+
+<header>
+  {
+    eyebrow && (
+      <p class="text-xs font-semibold tracking-[0.18em] text-accent-500 uppercase">{eyebrow}</p>
+    )
+  }
+  <h1 class:list={['font-display text-5xl leading-[0.95] tracking-[0.01em] text-white uppercase sm:text-6xl', eyebrow && 'mt-3']}>
+    {title}
+  </h1>
+  {
+    hasLead && (
+      <div class="mt-5 max-w-2xl text-lg leading-relaxed text-zinc-400">
+        <slot />
+      </div>
+    )
+  }
+</header>

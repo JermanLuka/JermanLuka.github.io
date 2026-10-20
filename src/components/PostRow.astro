@@ -1,0 +1,63 @@
+---
+// One blog post as a row: date on the left, title and summary beside it.
+// The home page stacks these inside one shared panel; the blog index gives
+// each its own, via `class`.
+
+interface Props {
+  href: string;
+  title: string;
+  date: string;
+  /** ISO form of `date`, for the <time> element. */
+  datetime: string;
+  summary: string;
+  /** Small label above the title, e.g. the series name. */
+  badge?: string;
+  tags?: string[];
+  /** What the tag filter matches against. Leave unset where there is no filter. */
+  filterValues?: string[];
+  class?: string;
+}
+
+const {
+  href,
+  title,
+  date,
+  datetime,
+  summary,
+  badge,
+  tags = [],
+  filterValues,
+  class: className,
+} = Astro.props;
+---
+
+<li data-tags={filterValues?.join('|')} class={className}>
+  <a
+    href={href}
+    class="group flex flex-col gap-1 p-6 transition hover:bg-white/[0.03] sm:flex-row sm:items-center sm:gap-8 sm:p-8"
+  >
+    <time datetime={datetime} class="shrink-0 text-sm text-zinc-500 sm:w-36">{date}</time>
+
+    <div class="min-w-0 flex-1">
+      {
+        badge && (
+          <p class="mb-1 text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">{badge}</p>
+        )
+      }
+      <h3 class="font-semibold text-white transition group-hover:text-accent-300">{title}</h3>
+      <p class="mt-1 text-sm leading-relaxed text-zinc-400">{summary}</p>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-3 flex flex-wrap gap-2 text-xs text-zinc-400">
+            {tags.map((tag) => (
+              <li class="rounded-full bg-white/5 px-2.5 py-1">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+
+    <span aria-hidden="true" class="hidden text-zinc-500 transition group-hover:translate-x-1 group-hover:text-white sm:block">→</span>
+  </a>
+</li>

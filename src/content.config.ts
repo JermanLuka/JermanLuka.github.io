@@ -34,6 +34,8 @@ const projects = defineCollection({
     summary: z.string(),
     tags: z.array(z.string()).default([]),
     repo: z.url().optional(),
+    /** The live product, for work that is out in the world. */
+    website: z.url().optional(),
     /**
      * Name of a blog series documenting this project. Matching posts are listed
      * on the project page automatically, so a new instalment is one new file.

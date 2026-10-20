@@ -1,0 +1,91 @@
+---
+// Cover art for a project: two soft colour pools over a near-black base, with
+// a line icon in the middle. Used on the project cards and as the banner on
+// each project page, so the two always match.
+
+interface Props {
+  /** Collection entry id. Picks the colours and the icon. */
+  id: string;
+  /** Sizing and rounding, which differ between a card and a page banner. */
+  class?: string;
+}
+
+const { id, class: className } = Astro.props;
+
+type Art = 'honeycomb' | 'hexagon' | 'relic' | 'monogram';
+
+// Two pools of colour placed in opposite corners over the page colour.
+const pools = (a: string, aAt: string, b: string, bAt: string) =>
+  `radial-gradient(110% 110% at ${aAt}, ${a}, transparent 55%), ` +
+  `radial-gradient(110% 110% at ${bAt}, ${b}, transparent 60%), ` +
+  'var(--color-page)';
+
+// Picked per project from the accent variables, so every accent gets its own
+// version of each cover for free. Anything not listed falls back to the first.
+const covers: Record<string, { background: string; art: Art }> = {
+  'integration-architectures': {
+    // Slate stays fixed: a cool neutral reads as "architecture" in any accent.
+    background: pools('var(--color-accent-800)', '0% 0%', '#334155', '100% 100%'),
+    art: 'hexagon',
+  },
+  'relic-of-ruin': {
+    background: pools('var(--color-warm-800)', '100% 0%', 'var(--color-accent-900)', '0% 100%'),
+    art: 'relic',
+  },
+  'personal-site': {
+    background: pools('var(--color-accent-700)', '0% 100%', 'var(--color-accent-950)', '100% 0%'),
+    art: 'monogram',
+  },
+  beeconn: {
+    // Honey stays fixed, whatever the accent: it is a beehive project.
+    background: pools('#92400e', '100% 100%', 'var(--color-accent-900)', '0% 0%'),
+    art: 'honeycomb',
+  },
+};
+
+const cover = covers[id] ?? covers['integration-architectures'];
+
+// `group-hover` only does something when a parent link carries `group`, so
+// the icon grows on a hovered card and sits still on a page banner.
+const artClass =
+  'absolute inset-0 m-auto text-white/85 transition duration-500 group-hover:scale-110';
+---
+
+<div aria-hidden="true" class:list={['relative overflow-hidden', className]} style={`background:${cover.background}`}>
+  <div class="grain absolute inset-0 opacity-20 mix-blend-overlay"></div>
+
+  {
+    cover.art === 'honeycomb' && (
+      <svg viewBox="0 0 48 40" fill="none" stroke="currentColor" stroke-width="1.2" class={`h-16 w-20 ${artClass}`}>
+        <path d="M14 4h8l4 7-4 7h-8l-4-7z" />
+        <path d="M26 11h8l4 7-4 7h-8l-4-7z" />
+        <path d="M14 18h8l4 7-4 7h-8l-4-7z" />
+      </svg>
+    )
+  }
+  {
+    cover.art === 'hexagon' && (
+      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" class={`size-20 ${artClass}`}>
+        <path d="M20 5 33 12.5v15L20 35 7 27.5v-15z" />
+        <path d="M20 12 26.9 16v8L20 28l-6.9-4v-8z" />
+      </svg>
+    )
+  }
+  {
+    cover.art === 'relic' && (
+      <svg viewBox="0 0 40 40" fill="none" stroke="currentColor" stroke-width="1.2" class={`size-20 group-hover:rotate-12 ${artClass}`}>
+        <path d="M20 4 32 20 20 36 8 20z" />
+        <path d="M8 20h24M20 4l-5 16 5 16 5-16z" />
+      </svg>
+    )
+  }
+  {
+    cover.art === 'monogram' && (
+      <svg viewBox="12 12 40 40" fill="currentColor" class={`size-16 ${artClass}`}>
+        <path d="M16 16h6v26h8v6H16z" />
+        <path d="M42 16h6v20c0 6.6-5.4 12-12 12h-2v-6h2c3.3 0 6-2.7 6-6z" />
+      </svg>
+    )
+  }
+</div>
+

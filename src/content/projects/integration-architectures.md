@@ -2,10 +2,10 @@
 title: Integration architecture comparison
 status: In progress
 kind: personal
-summary: The same .NET integration service built three times - layered, hexagonal, and message-driven - then measured on extensibility, complexity, performance, and fault tolerance.
+summary: The same .NET integration service built three times (layered, hexagonal, and message driven), then measured on extensibility, complexity, performance, and fault tolerance.
 tags: ['C#', '.NET', 'Architecture', 'xUnit']
 repo: https://github.com/JermanLuka/integracijski-vzorci-diploma
-order: 0
+order: 1
 ---
 
 My diploma project. Architecture advice usually arrives as opinion, so I wanted

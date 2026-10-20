@@ -1,0 +1,21 @@
+---
+// A project's status as a small pill. "Live" is neutral with a red dot; work
+// still in flight gets colour, so it stands out from finished things.
+
+interface Props {
+  status: string;
+}
+
+const { status } = Astro.props;
+
+const statusClass: Record<string, string> = {
+  'In progress': 'bg-warm-500/10 text-warm-300 ring-warm-500/25',
+  'In development': 'bg-accent-500/10 text-accent-300 ring-accent-500/25',
+};
+const pillClass = statusClass[status] ?? 'bg-white/5 text-zinc-200 ring-white/15';
+---
+
+<span class={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold ring-1 ${pillClass}`}>
+  {status === 'Live' && <span class="size-1.5 rounded-full bg-dot"></span>}
+  {status}
+</span>

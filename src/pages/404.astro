@@ -1,9 +1,7 @@
 ---
 // GitHub Pages serves this automatically for any path that does not exist.
 import Layout from '../layouts/Layout.astro';
-
-const linkClass =
-  'underline decoration-slate-300 underline-offset-4 transition-colors hover:decoration-slate-600 dark:decoration-slate-700 dark:hover:decoration-slate-400';
+import PageHeading from '../components/PageHeading.astro';
 
 const elsewhere = [
   { href: '/cv', label: 'CV', note: 'Where I have worked and what I work with.' },
@@ -18,30 +16,30 @@ const elsewhere = [
 ---
 
 <Layout
-  title="Page not found - Luka Jerman"
+  title="Page not found · Luka Jerman"
   description="That page does not exist."
 >
-  <p class="text-sm font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">
-    404
-  </p>
+  <PageHeading eyebrow="404" title="That page does not exist">
+    <p>
+      The link may be out of date, or I may have moved something. Either way,
+      here is everything that does exist:
+    </p>
+  </PageHeading>
 
-  <h1 class="mt-2 text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-    That page does not exist
-  </h1>
-
-  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
-    The link may be out of date, or I may have moved something. Either way,
-    here is everything that does exist:
-  </p>
-
-  <ul class="mt-8 space-y-4">
+  <ul class="mt-12 grid gap-4 sm:grid-cols-2">
     {
       elsewhere.map(({ href, label, note }) => (
         <li>
-          <a href={href} class={`font-medium ${linkClass}`}>
-            {label}
+          <a
+            href={href}
+            class="group glass block h-full rounded-3xl p-6 transition hover:-translate-y-0.5 hover:border-accent-500/30 motion-reduce:hover:translate-y-0"
+          >
+            <span class="flex items-center justify-between">
+              <span class="font-display text-2xl tracking-[0.01em] text-white uppercase">{label}</span>
+              <span aria-hidden="true" class="text-zinc-500 transition group-hover:translate-x-1 group-hover:text-white">→</span>
+            </span>
+            <span class="mt-2 block text-sm text-zinc-400">{note}</span>
           </a>
-          <p class="mt-1 text-sm text-slate-500 dark:text-slate-400">{note}</p>
         </li>
       ))
     }

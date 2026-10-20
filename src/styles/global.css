@@ -1,15 +1,208 @@
 @import "tailwindcss";
 
-/* Dark mode is driven by a `data-theme` attribute on <html> rather than by
-   `prefers-color-scheme`, so a person can override what their OS says. The
-   inline script in Layout.astro sets that attribute before the page paints,
-   resolving "system" into a real value, which is why no CSS here needs to
-   consult the media query at all. */
-@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
-
 /* Styles the HTML that markdown compiles to - headings, lists, code, links.
    Tailwind's reset strips all of that, so rendered posts need it back. */
 @plugin "@tailwindcss/typography";
+
+/* Design tokens. The site is dark only: one near-black page with an accent
+   colour. The fonts are self-hosted through Fontsource (imported in
+   Layout.astro), so nothing is requested from Google.
+
+   Components never name red directly. They use these colour roles, so the
+   accent menu in the header can re-colour the whole site in one place:
+     accent   the main colour: buttons, labels, hovers
+     warm     the secondary colour: "in progress", the 65%, the writing label
+     dot      small status dots and bullets
+     aurora   the third glow in the background
+     page     the background itself
+
+   `static` makes Tailwind write out every variable here even when no class
+   uses it. The project covers reference some of them only from inline
+   styles, which Tailwind cannot see. */
+@theme static {
+  --font-display: "Anton", Impact, sans-serif;
+  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  /* Red, the default. Values copied from Tailwind's red and orange. */
+  --color-accent-300: oklch(80.8% 0.114 19.571);
+  --color-accent-400: oklch(70.4% 0.191 22.216);
+  --color-accent-500: oklch(63.7% 0.237 25.331);
+  --color-accent-600: oklch(57.7% 0.245 27.325);
+  --color-accent-700: oklch(50.5% 0.213 27.518);
+  --color-accent-800: oklch(44.4% 0.177 26.899);
+  --color-accent-900: oklch(39.6% 0.141 25.723);
+  --color-accent-950: oklch(25.8% 0.092 26.042);
+
+  --color-warm-200: oklch(90.1% 0.076 70.697);
+  --color-warm-300: oklch(83.7% 0.128 66.29);
+  --color-warm-400: oklch(75% 0.183 55.934);
+  --color-warm-500: oklch(70.5% 0.213 47.604);
+  --color-warm-800: oklch(47% 0.157 37.304);
+  --color-warm-900: oklch(40.8% 0.123 38.172);
+
+  --color-dot: oklch(63.7% 0.237 25.331);
+  --color-aurora: oklch(40.8% 0.123 38.172);
+  --color-page: #070405;
+
+  --animate-drift-1: drift-1 22s ease-in-out infinite alternate;
+  --animate-drift-2: drift-2 26s ease-in-out infinite alternate;
+  --animate-drift-3: drift-3 30s ease-in-out infinite alternate;
+  --animate-marquee: marquee 45s linear infinite;
+
+  @keyframes drift-1 {
+    to { transform: translate(14%, 12%) scale(1.15); }
+  }
+  @keyframes drift-2 {
+    to { transform: translate(-12%, 16%) scale(0.9); }
+  }
+  @keyframes drift-3 {
+    to { transform: translate(-16%, -10%) scale(1.2); }
+  }
+  /* The track holds an even number of identical copies, so shifting by half
+     loops cleanly. The 45s suits one copy; the home page stretches it to
+     match how many copies each loop slides. */
+  @keyframes marquee {
+    to { transform: translateX(-50%); }
+  }
+}
+
+/* The other accents. The menu in the header sets data-accent on <html>, and
+   every utility reads these variables at paint time, so redefining them here
+   is the whole switch.
+
+   To add a colour: copy one of these blocks, give it a new name and values,
+   and add a matching entry to src/lib/accents.ts. That is everything. */
+
+/* The name the menu button shows for the colour that is active. */
+:root {
+  --accent-name: "Red";
+}
+
+/* Tailwind's blue, with amber as the warm colour and sky for the glow. */
+[data-accent="blue"] {
+  --accent-name: "Blue";
+
+  --color-accent-300: oklch(80.9% 0.105 251.813);
+  --color-accent-400: oklch(70.7% 0.165 254.624);
+  --color-accent-500: oklch(62.3% 0.214 259.815);
+  --color-accent-600: oklch(54.6% 0.245 262.881);
+  --color-accent-700: oklch(48.8% 0.243 264.376);
+  --color-accent-800: oklch(42.4% 0.199 265.638);
+  --color-accent-900: oklch(37.9% 0.146 265.522);
+  --color-accent-950: oklch(28.2% 0.091 267.935);
+
+  --color-warm-200: oklch(92.4% 0.12 95.746);
+  --color-warm-300: oklch(87.9% 0.169 91.605);
+  --color-warm-400: oklch(82.8% 0.189 84.429);
+  --color-warm-500: oklch(76.9% 0.188 70.08);
+  --color-warm-800: oklch(47.3% 0.137 46.201);
+  --color-warm-900: oklch(41.4% 0.112 45.904);
+
+  --color-dot: oklch(82.8% 0.189 84.429);
+  --color-aurora: oklch(39.1% 0.09 240.876);
+  --color-page: #05070b;
+}
+
+/* Tailwind's emerald, with lime as the warm colour and teal for the glow. */
+[data-accent="green"] {
+  --accent-name: "Green";
+
+  --color-accent-300: oklch(84.5% 0.143 164.978);
+  --color-accent-400: oklch(76.5% 0.177 163.223);
+  --color-accent-500: oklch(69.6% 0.17 162.48);
+  --color-accent-600: oklch(59.6% 0.145 163.225);
+  --color-accent-700: oklch(50.8% 0.118 165.612);
+  --color-accent-800: oklch(43.2% 0.095 166.913);
+  --color-accent-900: oklch(37.8% 0.077 168.94);
+  --color-accent-950: oklch(26.2% 0.051 172.552);
+
+  --color-warm-200: oklch(93.8% 0.127 124.321);
+  --color-warm-300: oklch(89.7% 0.196 126.665);
+  --color-warm-400: oklch(84.1% 0.238 128.85);
+  --color-warm-500: oklch(76.8% 0.233 130.85);
+  --color-warm-800: oklch(45.3% 0.124 130.933);
+  --color-warm-900: oklch(40.5% 0.101 131.063);
+
+  --color-dot: oklch(84.1% 0.238 128.85);
+  --color-aurora: oklch(38.6% 0.063 188.416);
+  --color-page: #040806;
+}
+
+/* Built around the .NET brand purple, #512BD4, which is the 700 (the
+   buttons). The other steps keep its hue and borrow lightness and chroma
+   from halfway between Tailwind's indigo and violet. Pink is the warm colour. */
+[data-accent="purple"] {
+  --accent-name: ".NET purple";
+
+  --color-accent-300: oklch(79.8% 0.113 282.4);
+  --color-accent-400: oklch(68.8% 0.183 282.4);
+  --color-accent-500: oklch(59.6% 0.242 282.4);
+  --color-accent-600: oklch(52.6% 0.26 282.4);
+  --color-accent-700: oklch(46.2% 0.235 282.4);
+  --color-accent-800: oklch(41.5% 0.214 282.4);
+  --color-accent-900: oklch(37% 0.167 282.4);
+  --color-accent-950: oklch(27% 0.116 282.4);
+
+  --color-warm-200: oklch(89.9% 0.061 343.231);
+  --color-warm-300: oklch(82.3% 0.12 346.018);
+  --color-warm-400: oklch(71.8% 0.202 349.761);
+  --color-warm-500: oklch(65.6% 0.241 354.308);
+  --color-warm-800: oklch(45.9% 0.187 3.815);
+  --color-warm-900: oklch(40.8% 0.153 2.432);
+
+  --color-dot: oklch(71.8% 0.202 349.761);
+  --color-aurora: oklch(40.8% 0.153 2.432);
+  --color-page: #07050c;
+}
+
+/* Accent glows for the main buttons and hovered cards. Written out here
+   rather than as arbitrary shadows so they follow the accent switch too. */
+@utility glow-button {
+  box-shadow: 0 0 30px -12px color-mix(in oklab, var(--color-accent-700) 40%, transparent);
+}
+
+@utility glow-button-strong {
+  box-shadow: 0 0 36px -10px color-mix(in oklab, var(--color-accent-600) 50%, transparent);
+}
+
+@utility glow-card {
+  box-shadow: 0 20px 50px -24px color-mix(in oklab, var(--color-accent-600) 30%, transparent);
+}
+
+/* Frosted panel: a faint top-lit gradient over whatever is behind it. */
+@utility glass {
+  background-image: linear-gradient(180deg, rgb(255 255 255 / 0.06), rgb(255 255 255 / 0.02));
+  border: 1px solid rgb(255 255 255 / 0.08);
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+}
+
+/* Film grain, generated by an SVG noise filter rather than shipped as an image. */
+@utility grain {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Faint blueprint grid that fades out from the top centre. */
+@utility grid-lines {
+  background-image:
+    linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+  background-size: 64px 64px;
+  -webkit-mask-image: radial-gradient(ellipse at top, #000 15%, transparent 65%);
+  mask-image: radial-gradient(ellipse at top, #000 15%, transparent 65%);
+}
+
+/* Soft edges, so glows and the scrolling stack strip dissolve instead of
+   stopping at a hard line. */
+@utility fade-b {
+  -webkit-mask-image: linear-gradient(to bottom, #000 50%, transparent);
+  mask-image: linear-gradient(to bottom, #000 50%, transparent);
+}
+
+@utility fade-x {
+  -webkit-mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(to right, transparent, #000 12%, #000 88%, transparent);
+}
 
 /* The tag filter hides cards with the `hidden` attribute, which needs to beat
    any display utility sitting on the same element. */
@@ -19,15 +212,10 @@
   }
 }
 
-/* Screenshots have their own white background, so without a border they bleed
-   into the page. The rule also keeps a dark-mode screenshot from floating. */
+/* A faint frame keeps a dark screenshot from dissolving into the dark page. */
 .prose :where(img) {
   border-radius: 0.75rem;
-  border: 1px solid rgb(226 232 240);
-}
-
-[data-theme="dark"] .prose :where(img) {
-  border-color: rgb(30 41 59);
+  border: 1px solid rgb(255 255 255 / 0.08);
 }
 
 /* Markdown tables can be wider than the 42rem content column. Let them scroll

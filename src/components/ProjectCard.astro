@@ -1,0 +1,59 @@
+---
+import ProjectCover from './ProjectCover.astro';
+import StatusPill from './StatusPill.astro';
+
+interface Props {
+  /** Collection entry id. Picks the cover art. */
+  id: string;
+  href: string;
+  title: string;
+  status: string;
+  summary: string;
+  tags?: string[];
+  /** Small label above the title, e.g. "Client work". */
+  badge?: string;
+  /**
+   * What the tag filter matches against. Leave unset where there is no filter;
+   * the card then carries no data-tags at all.
+   */
+  filterValues?: string[];
+}
+
+const { id, href, title, status, summary, tags = [], badge, filterValues } = Astro.props;
+---
+
+<li data-tags={filterValues?.join('|')}>
+  <a
+    href={href}
+    class="group glass block h-full rounded-3xl p-2 transition duration-300 hover:-translate-y-1 hover:border-accent-500/30 hover:glow-card motion-reduce:hover:translate-y-0"
+  >
+    <ProjectCover id={id} class="h-48 rounded-[1.25rem]" />
+
+    <div class="p-5">
+      <div class="flex items-center justify-between">
+        <StatusPill status={status} />
+        <span aria-hidden="true" class="text-zinc-500 transition group-hover:text-white">↗</span>
+      </div>
+
+      {
+        badge && (
+          <p class="mt-4 text-xs font-semibold tracking-[0.14em] text-zinc-500 uppercase">{badge}</p>
+        )
+      }
+      <h3 class:list={['font-display text-2xl tracking-[0.01em] text-white uppercase', badge ? 'mt-1' : 'mt-4']}>
+        {title}
+      </h3>
+      <p class="mt-2 leading-relaxed text-zinc-400">{summary}</p>
+
+      {
+        tags.length > 0 && (
+          <ul class="mt-5 flex flex-wrap gap-2 text-xs text-zinc-400">
+            {tags.map((tag) => (
+              <li class="rounded-full bg-white/5 px-2.5 py-1">{tag}</li>
+            ))}
+          </ul>
+        )
+      }
+    </div>
+  </a>
+</li>

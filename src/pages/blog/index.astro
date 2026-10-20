@@ -1,7 +1,8 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../../layouts/Layout.astro';
-import EntryCard from '../../components/EntryCard.astro';
+import PageHeading from '../../components/PageHeading.astro';
+import PostRow from '../../components/PostRow.astro';
 import TagFilter from '../../components/TagFilter.astro';
 import { formatDate, isoDate } from '../../lib/date';
 
@@ -20,40 +21,41 @@ const tags =
         a.localeCompare(b),
       )
     : [];
+
+const emptyClass =
+  'glass mt-10 rounded-3xl px-6 py-12 text-center text-sm text-zinc-400';
 ---
 
 <Layout
-  title="Blog - Luka Jerman"
+  title="Blog · Luka Jerman"
   description="Notes on what I am building and learning."
+  width="wide"
 >
-  <h1 class="text-3xl font-semibold tracking-tight text-slate-900 dark:text-slate-100">
-    Blog
-  </h1>
-
-  <p class="mt-5 leading-relaxed text-slate-600 dark:text-slate-400">
-    Notes on what I'm building and whatever I'm figuring out.
-  </p>
+  <PageHeading eyebrow="Writing" title="Notes from the build">
+    <p>Notes on what I'm building and whatever I'm figuring out.</p>
+  </PageHeading>
 
   {
     posts.length === 0 ? (
-      <p class="mt-10 rounded-md border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400">
-        No posts yet.
-      </p>
+      <p class={emptyClass}>No posts yet.</p>
     ) : (
       <>
-        <div class="mt-8">
+        <div class="mt-10">
           <TagFilter
             groups={[tags.map((tag) => ({ value: tag, label: tag }))]}
             label="Filter posts by tag"
           />
         </div>
 
-        <ul data-filter-list class="mt-6 space-y-4">
+        {/* Each post gets its own panel, rather than sharing one, so hiding
+            some with the filter never leaves a stray divider behind. */}
+        <ul data-filter-list class="mt-8 space-y-4">
           {posts.map((post) => (
-            <EntryCard
+            <PostRow
+              class="glass overflow-hidden rounded-3xl"
               href={`/blog/${post.id}`}
               title={post.data.title}
-              meta={formatDate(post.data.date)}
+              date={formatDate(post.data.date)}
               datetime={isoDate(post.data.date)}
               badge={
                 post.data.series
@@ -62,15 +64,12 @@ const tags =
               }
               summary={post.data.summary}
               tags={post.data.tags}
+              filterValues={post.data.tags}
             />
           ))}
         </ul>
 
-        <p
-          data-filter-empty
-          hidden
-          class="mt-6 rounded-md border border-dashed border-slate-300 px-5 py-8 text-center text-sm text-slate-500 dark:border-slate-700 dark:text-slate-400"
-        >
+        <p data-filter-empty hidden class={emptyClass}>
           No posts with that tag.
         </p>
       </>

@@ -3,7 +3,7 @@ title: Proving the feel before building the game
 date: 2026-08-23T18:00:00
 series: Relic of Ruin devlog
 part: 1
-summary: 'One month, 36 commits, and one question that had to be answered before anything else was worth building: does slow, manual-facing melee actually feel good in a fixed top-down camera?'
+summary: 'One month, 36 commits, and one question that had to be answered before anything else was worth building: does slow, manual facing melee actually feel good in a fixed top down camera?'
 tags: ['Godot', 'C#', 'Game design']
 ---
 

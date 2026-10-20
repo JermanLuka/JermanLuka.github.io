@@ -1,7 +1,7 @@
 ---
 title: Three ways to build the same integration service
 date: 2026-08-23T10:00:00
-summary: Layered, hexagonal, and message-driven, built three times over and measured. What each one actually costs and what it buys you.
+summary: Layered, hexagonal, and message driven, built three times over and measured. What each one actually costs and what it buys you.
 tags: ['Architecture', '.NET', 'Diploma']
 ---
 

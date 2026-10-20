@@ -2,9 +2,10 @@
 title: BeeConn
 status: Live
 kind: client
-summary: Full-stack work on the web application for a commercial hive monitoring system, turning IoT sensor readings into charts, tables, and reports.
+summary: Full stack work on the web application for a commercial hive monitoring system, turning IoT sensor readings into charts, tables, and reports.
 tags: ['C#', '.NET', 'JavaScript', 'MVC', 'MySQL']
-order: 3
+website: https://beeconn.si/
+order: 0
 ---
 
 Freelance full-stack work on the web application for BeeConn, a commercial hive
