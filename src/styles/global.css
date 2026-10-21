@@ -1,12 +1,13 @@
 @import "tailwindcss";
+@import "./fonts.css";
 
 /* Styles the HTML that markdown compiles to - headings, lists, code, links.
    Tailwind's reset strips all of that, so rendered posts need it back. */
 @plugin "@tailwindcss/typography";
 
 /* Design tokens. The site is dark only: one near-black page with an accent
-   colour. The fonts are self-hosted through Fontsource (imported in
-   Layout.astro), so nothing is requested from Google.
+   colour. fonts.css defines self-hosted WOFF2 fonts and adjusted local
+   fallbacks; Layout.astro preloads the two faces used above the fold.
 
    Components never name red directly. They use these colour roles, so the
    accent menu in the header can re-colour the whole site in one place:
@@ -20,8 +21,8 @@
    uses it. The project covers reference some of them only from inline
    styles, which Tailwind cannot see. */
 @theme static {
-  --font-display: "Anton", Impact, sans-serif;
-  --font-body: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Anton", "Anton Fallback", Impact, sans-serif;
+  --font-body: "Inter Variable", "Inter Fallback", ui-sans-serif, system-ui, sans-serif;
 
   /* Red, the default. Values copied from Tailwind's red and orange. */
   --color-accent-300: oklch(80.8% 0.114 19.571);
