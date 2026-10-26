@@ -41,8 +41,8 @@ export const experience: Job[] = [
     blurb:
       'An enterprise document management and certified archiving platform used by banks, healthcare providers, and financial institutions across the region.',
     notes: [
-      'Owned the gRPC service and the protocol between service and workers in a team rebuild of the script execution sandbox, replacing an aging component. Scripts compiled with Roslyn streamed to isolated worker processes over I/O, invoked by reflection, with heartbeats to detect failures. The new sandbox handles 1,500 scripts per second on two instances, twice the old throughput, and a script can no longer stop an instance or reach the machine it runs on.',
-      'Rewrote the PDF digital signing library against a newer cryptography vendor API, cutting signature processing from 1,053ms to 363ms (65% faster) while returning results identical to the previous implementation.',
+      'Owned the gRPC service and the protocol between service and workers in a team rebuild of the script execution sandbox, replacing an aging component. Scripts compiled with Roslyn streamed to isolated worker processes over pipes, invoked by reflection, with heartbeats to detect failures. The new sandbox handles 1,500 scripts per second on two instances, twice the old throughput, and a script can no longer stop an instance or reach the machine it runs on.',
+      'Rewrote the PDF digital signing library against a newer cryptography vendor API, cutting signature validation from 1,053ms to 363ms (65% less time) while returning results identical to the previous implementation.',
       "Extended the platform's external integration API with JWT authentication and implicit process context passing, with full backwards compatibility for enterprise integrations running in production.",
       'Diagnosed a distributed race in the background job system: cleanup batches outran their Redis heartbeat TTL, spawning duplicate workers that raced on the same records. Fixed with batch caps, cancellation propagation, and a mapping from each job to its worker.',
       "Fixed a multitenant audit logging defect where a shared retry buffer let one tenant drain another's failed entries, mislabelling production error logs. Partitioned retry state per tenant.",
@@ -52,6 +52,7 @@ export const experience: Job[] = [
       'C#',
       '.NET',
       'gRPC',
+      'Pipe-based IPC',
       'Redis',
       'Elasticsearch',
       'SQL Server',
