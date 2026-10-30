@@ -1,0 +1,27 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "contact-form",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  // mimetext's default build imports Node's os module.
+  "compatibility_flags": ["nodejs_compat"],
+
+  // Served at contact.lukajerman.dev. The domain is already on this Cloudflare
+  // account, so deploying creates the DNS record and certificate by itself.
+  "routes": [{ "pattern": "contact.lukajerman.dev", "custom_domain": true }],
+  "workers_dev": false,
+
+  // Mail goes out through Email Routing. With no destination_address here it
+  // may send to any verified destination address; the CONTACT_TO secret says
+  // which, so the real inbox never appears in this public repo.
+  "send_email": [{ "name": "MAILER" }],
+
+  // Public settings. The two secrets, CONTACT_TO and TURNSTILE_SECRET, are set
+  // with `npx wrangler secret put`, and locally in .dev.vars.
+  "vars": {
+    "ALLOWED_ORIGIN": "https://lukajerman.dev",
+    "SENDER": "form@lukajerman.dev"
+  },
+
+  "observability": { "enabled": true }
+}

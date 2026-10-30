@@ -3,7 +3,13 @@ import { siGithub } from 'simple-icons';
 import Layout from '../layouts/Layout.astro';
 import PageHeading from '../components/PageHeading.astro';
 import CopyEmail from '../components/CopyEmail.astro';
-import { email } from '../lib/contact';
+import ContactForm from '../components/ContactForm.astro';
+import { email, turnstileSiteKey } from '../lib/contact';
+
+// The form can't pass its spam check without a Turnstile key, so the page
+// leaves it out until there is one and lists the email and profiles instead.
+// With the form on, those live only in the footer, as on every other page.
+const hasForm = turnstileSiteKey !== '';
 
 const profiles = [
   {
@@ -29,70 +35,82 @@ const iconClass =
   description="How to get in touch with Luka Jerman."
 >
   <PageHeading eyebrow="Contact" title="Get in touch">
-    <p>Email is the best way to reach me. I'm also on GitHub and LinkedIn.</p>
+    {
+      hasForm ? (
+        <p>Send me a message here and it lands straight in my inbox. You can also email me or find me on GitHub and LinkedIn.</p>
+      ) : (
+        <p>Email is the best way to reach me. I'm also on GitHub and LinkedIn.</p>
+      )
+    }
   </PageHeading>
 
-  <ul class="mt-12 space-y-4">
-    <li>
-      <CopyEmail class={`${rowClass} w-full text-left`}>
-        <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent-700 text-white">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            class="size-5"
-          >
-            <rect x="2" y="4" width="20" height="16" rx="2" />
-            <path d="m2 7 10 6 10-6" />
-          </svg>
-        </span>
-        <span class="min-w-0 flex-1">
-          <span class="block text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">Email</span>
-          <span class="mt-0.5 block truncate text-lg font-medium text-white">{email}</span>
-        </span>
-        <span aria-hidden="true" class="flex shrink-0 items-center gap-1.5 text-sm font-medium text-zinc-500 transition group-hover:text-white">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            class="size-4"
-          >
-            <rect x="9" y="9" width="12" height="12" rx="2" />
-            <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
-          </svg>
-          <span class="hidden sm:inline">Copy</span>
-        </span>
-      </CopyEmail>
-    </li>
-
-    {
-      profiles.map((profile) => (
+  {
+    hasForm ? (
+      <div class="mt-12">
+        <ContactForm />
+      </div>
+    ) : (
+      <ul class="mt-12 space-y-4">
         <li>
-          <a href={profile.href} target="_blank" rel="me noopener noreferrer" class={rowClass}>
-            <span class={iconClass}>
-              {profile.label === 'GitHub' ? (
-                <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-5">
-                  <path d={siGithub.path} />
-                </svg>
-              ) : (
-                <span aria-hidden="true" class="text-base font-bold">in</span>
-              )}
+          <CopyEmail class={`${rowClass} w-full text-left`}>
+            <span class="flex size-12 shrink-0 items-center justify-center rounded-2xl bg-accent-700 text-white">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+                class="size-5"
+              >
+                <rect x="2" y="4" width="20" height="16" rx="2" />
+                <path d="m2 7 10 6 10-6" />
+              </svg>
             </span>
             <span class="min-w-0 flex-1">
-              <span class="block text-xs font-semibold tracking-[0.14em] text-zinc-500 uppercase">{profile.label}</span>
-              <span class="mt-0.5 block truncate text-lg font-medium text-white">{profile.value}</span>
+              <span class="block text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">Email</span>
+              <span class="mt-0.5 block truncate text-lg font-medium text-white">{email}</span>
             </span>
-            <span aria-hidden="true" class="text-zinc-500 transition group-hover:text-white">↗</span>
-          </a>
+            <span aria-hidden="true" class="flex shrink-0 items-center gap-1.5 text-sm font-medium text-zinc-500 transition group-hover:text-white">
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.75"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="size-4"
+              >
+                <rect x="9" y="9" width="12" height="12" rx="2" />
+                <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
+              </svg>
+              <span class="hidden sm:inline">Copy</span>
+            </span>
+          </CopyEmail>
         </li>
-      ))
-    }
-  </ul>
+
+        {profiles.map((profile) => (
+          <li>
+            <a href={profile.href} target="_blank" rel="me noopener noreferrer" class={rowClass}>
+              <span class={iconClass}>
+                {profile.label === 'GitHub' ? (
+                  <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" class="size-5">
+                    <path d={siGithub.path} />
+                  </svg>
+                ) : (
+                  <span aria-hidden="true" class="text-base font-bold">in</span>
+                )}
+              </span>
+              <span class="min-w-0 flex-1">
+                <span class="block text-xs font-semibold tracking-[0.14em] text-zinc-500 uppercase">{profile.label}</span>
+                <span class="mt-0.5 block truncate text-lg font-medium text-white">{profile.value}</span>
+              </span>
+              <span aria-hidden="true" class="text-zinc-500 transition group-hover:text-white">↗</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    )
+  }
 </Layout>

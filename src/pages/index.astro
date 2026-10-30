@@ -4,16 +4,10 @@ import { Image } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostRow from '../components/PostRow.astro';
-import CopyEmail from '../components/CopyEmail.astro';
-import portrait from '../assets/portrait.jpg';
+import ResultCards from '../components/ResultCards.astro';
+import portrait from '../assets/portrait.png';
 import { skillLogos } from '../lib/skills';
-import { experience, yearsOfExperience } from '../lib/cv';
 import { formatDate, isoDate } from '../lib/date';
-import { email } from '../lib/contact';
-
-const current = experience[0];
-
-const years = yearsOfExperience();
 
 // Copies of the stack list in the scrolling strip. Half the strip must be
 // wider than the screen, or its end slides into view before the loop resets.
@@ -55,31 +49,36 @@ const external = (href: string) =>
   description="Luka Jerman, software engineer. I build the systems that businesses run on every day, in C# and .NET."
   width="full"
 >
-  <section class="mx-auto grid max-w-6xl items-center gap-14 px-5 pt-16 pb-20 sm:px-6 sm:pt-24 lg:grid-cols-[1.2fr_0.8fr] lg:gap-16">
+  {/* Each block rises in on its own animation-delay, so the hero assembles
+      top to bottom. On desktop it fills the screen below the header (4rem),
+      so it gets the first view to itself. */}
+  <section class="mx-auto grid max-w-6xl items-center gap-14 px-5 pt-16 pb-16 sm:px-6 sm:pt-24 lg:min-h-[calc(100svh-4rem)] lg:grid-cols-[1.2fr_0.8fr] lg:gap-16 lg:py-16">
     <div>
-      {/* Both lines sit in the h1 so search engines still read the name,
-          even though the role is what's visually loud. */}
+      {/* The name and the claim both sit in the h1 so search engines still
+          read the name, even though the claim is what's visually loud. */}
       <h1>
-        <span class="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] text-zinc-300 uppercase">
+        <span class="glass inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold tracking-[0.14em] text-zinc-300 uppercase motion-safe:animate-rise">
           <span class="size-1.5 rounded-full bg-dot"></span>
           Luka Jerman
         </span>
-        <span class="mt-7 block font-display text-[clamp(2.75rem,5.5vw,4.25rem)] leading-[0.95] tracking-[0.01em] text-white uppercase">
-          Software Engineer
+        <span
+          class="mt-7 block font-display text-[clamp(2.6rem,4.6vw,3.9rem)] leading-[0.95] tracking-[0.01em] text-white uppercase motion-safe:animate-rise"
+          style="animation-delay:80ms"
+        >
+          I build production software that runs <span class="text-accent-500">fast</span>.
         </span>
       </h1>
 
-      <p class="mt-6 max-w-xl text-2xl leading-snug font-medium text-zinc-100 sm:text-[1.75rem]">
-        I build the systems that businesses run on every day.
+      <p
+        class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400 motion-safe:animate-rise sm:text-xl"
+        style="animation-delay:200ms"
+      >
+        I've written software for fishing fleets, factories, banks and
+        healthcare providers. <span class="text-zinc-100">I optimize systems and back it up with
+        numbers.</span>
       </p>
 
-      <p class="mt-4 max-w-xl text-lg leading-relaxed text-zinc-400">
-        C# and .NET, on everything from satellite vessel monitoring and
-        manufacturing ERP to certified document archiving for banks and
-        healthcare.
-      </p>
-
-      <div class="mt-10 flex flex-wrap items-center gap-3">
+      <div class="mt-10 flex flex-wrap items-center gap-3 motion-safe:animate-rise" style="animation-delay:280ms">
         <a
           href="/cv"
           class="group inline-flex items-center gap-2 rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white glow-button transition hover:bg-accent-600 hover:glow-button-strong"
@@ -91,18 +90,18 @@ const external = (href: string) =>
           href="#work"
           class="glass rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
         >
-          See projects
+          See the work
         </a>
       </div>
     </div>
 
-    <div class="relative mx-auto w-full max-w-xs lg:mr-0">
+    <div class="relative mx-auto w-full max-w-xs motion-safe:animate-rise lg:mr-0" style="animation-delay:200ms">
       <div
         aria-hidden="true"
         class="absolute -inset-4 rounded-[2.5rem] bg-linear-to-br from-accent-800/25 via-accent-950/20 to-warm-900/15 blur-3xl"
       ></div>
 
-      <figure class="glass relative rounded-[2rem] p-2">
+      <figure class="glass relative rounded-[2rem] p-0.5">
         <Image
           src={portrait}
           alt="Luka Jerman"
@@ -110,50 +109,19 @@ const external = (href: string) =>
           densities={[1, 2]}
           loading="eager"
           fetchpriority="high"
-          class="aspect-[4/5] w-full rounded-[1.6rem] object-cover"
+          class="aspect-[4/5] w-full rounded-[1.875rem] object-cover"
         />
-        <figcaption class="absolute inset-x-2 bottom-2 rounded-b-[1.6rem] bg-linear-to-t from-black/85 via-black/40 to-transparent px-5 pt-16 pb-5">
-          <p class="text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">Now</p>
-          <p class="mt-0.5 font-medium text-white">Working at {current.org}</p>
-        </figcaption>
       </figure>
-
-      <p class="glass absolute -top-4 right-3 flex items-center gap-2 rounded-full px-3.5 py-2 text-xs font-semibold text-white shadow-xl shadow-black/40 sm:-right-4">
-        <span class="relative flex size-2">
-          <span class="absolute inline-flex size-full rounded-full bg-dot opacity-70 motion-safe:animate-ping"></span>
-          <span class="relative inline-flex size-2 rounded-full bg-dot"></span>
-        </span>
-        {years}+ years in production .NET
-      </p>
     </div>
   </section>
 
-  <section aria-label="At a glance" class="mx-auto max-w-6xl px-5 sm:px-6">
-    {/* flex-col-reverse puts each number above its label while the label
-        stays first for screen readers; justify-end then lines the numbers up
-        along the top, however many lines a label wraps to. */}
-    <dl class="glass grid divide-y divide-white/5 rounded-3xl lg:grid-cols-4 lg:divide-x lg:divide-y-0">
-      <div class="flex flex-col-reverse justify-end p-8">
-        <dt class="mt-2 text-sm text-zinc-400">shipping production .NET</dt>
-        <dd class="font-display text-5xl tracking-[0.01em] text-white uppercase">
-          {years}+<span class="text-accent-500"> yrs</span>
-        </dd>
-      </div>
-      <div class="flex flex-col-reverse justify-end p-8">
-        <dt class="mt-2 text-sm text-zinc-400">domains: fisheries, manufacturing, enterprise archiving</dt>
-        <dd class="font-display text-5xl tracking-[0.01em] text-white">3</dd>
-      </div>
-      <div class="flex flex-col-reverse justify-end p-8">
-        <dt class="mt-2 text-sm text-zinc-400">script throughput in a new sandbox, 1,500 per second</dt>
-        {/* A capital X, not the × sign: Anton has no ×, and the fallback
-            font draws it tiny next to the numbers. */}
-        <dd class="font-display text-5xl tracking-[0.01em] text-white uppercase">2<span class="text-accent-500">x</span></dd>
-      </div>
-      <div class="flex flex-col-reverse justify-end p-8">
-        <dt class="mt-2 text-sm text-zinc-400">less time per PDF signature validation after a library rewrite</dt>
-        <dd class="font-display text-5xl tracking-[0.01em] text-white">65<span class="text-warm-400">%</span></dd>
-      </div>
-    </dl>
+  <section class="mx-auto max-w-6xl px-5 pt-12 sm:px-6">
+    <p class="text-xs font-semibold tracking-[0.18em] text-accent-500 uppercase">Results</p>
+    <h2 class="mt-3 font-display text-4xl tracking-[0.01em] text-white uppercase sm:text-5xl">Measured in production</h2>
+
+    <div class="mt-12">
+      <ResultCards />
+    </div>
   </section>
 
   {/* Identical copies of the list; the animation slides the track by exactly
@@ -161,7 +129,7 @@ const external = (href: string) =>
       same as the first, so the jump is invisible and the loop runs forever.
       Each loop slides half the copies, so the duration scales with them to
       keep the speed at 45s per copy. */}
-  <section aria-label="Tech stack" class="fade-x mt-20 overflow-hidden">
+  <section aria-label="Tech stack" class="fade-x mt-28 overflow-hidden">
     <div
       class="flex w-max hover:[animation-play-state:paused] motion-safe:animate-marquee"
       style={`animation-duration:${(marqueeCopies / 2) * 45}s`}
@@ -251,29 +219,20 @@ const external = (href: string) =>
       ></div>
 
       <h2 class="relative mx-auto max-w-3xl font-display text-4xl tracking-[0.01em] text-white uppercase sm:text-6xl">
-        Got a system that needs understanding before it changes?
+        Need a project built or optimized?
       </h2>
       <p class="relative mx-auto mt-5 max-w-xl text-zinc-400">
-        Email is the best way to reach me. I'm also on GitHub and LinkedIn.
+        Send me a message, or find me on GitHub and LinkedIn.
       </p>
 
       <div class="relative mt-10 flex flex-wrap justify-center gap-3">
-        <CopyEmail class="inline-flex items-center gap-2 rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white glow-button transition hover:bg-accent-600">
-          {email}
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.75"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            aria-hidden="true"
-            class="size-4 opacity-80"
-          >
-            <rect x="9" y="9" width="12" height="12" rx="2" />
-            <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" />
-          </svg>
-        </CopyEmail>
+        <a
+          href="/contact"
+          class="group inline-flex items-center gap-2 rounded-full bg-accent-700 px-6 py-3 text-sm font-semibold text-white glow-button transition hover:bg-accent-600"
+        >
+          Send me a message
+          <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
+        </a>
         {
           profiles.map(({ href, label }) => (
             <a

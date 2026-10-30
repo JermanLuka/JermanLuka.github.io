@@ -1,0 +1,6 @@
+# Copy this to .dev.vars for `npm run dev`. The Turnstile secret is
+# Cloudflare's published test key, which accepts any token, so the form works
+# locally without a real widget. Nothing is really emailed locally.
+ALLOWED_ORIGIN=http://localhost:4321
+TURNSTILE_SECRET=1x0000000000000000000000000000000AA
+CONTACT_TO=you@example.com

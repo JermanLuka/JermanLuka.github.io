@@ -12,7 +12,7 @@
    Components never name red directly. They use these colour roles, so the
    accent menu in the header can re-colour the whole site in one place:
      accent   the main colour: buttons, labels, hovers
-     warm     the secondary colour: "in progress", the 65%, the writing label
+     warm     the secondary colour: "in progress", the writing label
      dot      small status dots and bullets
      aurora   the third glow in the background
      page     the background itself
@@ -49,6 +49,7 @@
   --animate-drift-2: drift-2 26s ease-in-out infinite alternate;
   --animate-drift-3: drift-3 30s ease-in-out infinite alternate;
   --animate-marquee: marquee 45s linear infinite;
+  --animate-rise: rise 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
 
   @keyframes drift-1 {
     to { transform: translate(14%, 12%) scale(1.15); }
@@ -64,6 +65,12 @@
      match how many copies each loop slides. */
   @keyframes marquee {
     to { transform: translateX(-50%); }
+  }
+  /* The entrance for the home page hero. It has only a `from`, so it ends on
+     the element's own style, and `both` holds that `from` through an
+     animation-delay, which is how each block waits for its turn. */
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); filter: blur(6px); }
   }
 }
 

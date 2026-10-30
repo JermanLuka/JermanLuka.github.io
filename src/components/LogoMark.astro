@@ -1,0 +1,17 @@
+---
+// The LJ mark: a rounded square in the current text colour with the letters
+// cut out in white. The header and the footer both show it.
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<svg viewBox="0 0 64 64" aria-hidden="true" class={className}>
+  <rect width="64" height="64" rx="14" fill="currentColor" />
+  <g fill="#fff">
+    <path d="M16 16h6v26h8v6H16z" />
+    <path d="M42 16h6v20c0 6.6-5.4 12-12 12h-2v-6h2c3.3 0 6-2.7 6-6z" />
+  </g>
+</svg>
