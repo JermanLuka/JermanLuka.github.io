@@ -2,46 +2,52 @@
 title: Integration architecture comparison
 status: In progress
 kind: personal
-summary: The same .NET integration service built three times (layered, hexagonal, and message driven), then measured on extensibility, complexity, performance, and fault tolerance.
+summary: "My diploma project. The same .NET integration service built three ways (layered, hexagonal and message driven), then measured."
+description: "One .NET integration service built three ways (layered, hexagonal, message driven), measured on extensibility, complexity, performance and fault tolerance."
 tags: ['C#', '.NET', 'Architecture', 'xUnit']
 repo: https://github.com/JermanLuka/integracijski-vzorci-diploma
 order: 1
 ---
 
-My diploma project. Architecture advice usually arrives as opinion, so I wanted
-numbers instead: build one service three ways, change something, and measure
-what each version costs you.
+My diploma project. Architecture advice is usually opinion. I wanted numbers
+instead:
 
-The service collects metrics from four public APIs (GitHub, StackOverflow,
-World Bank, OpenMeteo) and forwards them to a monitoring target. All three
-implementations share the same domain model, data sources, and target client.
-They differ only in how those pieces are wired together.
+- Build one service three ways.
+- Make the same change to each.
+- Measure what each version costs.
 
-## The three implementations
+## What the service does
 
-**Monolith (layered)** is the baseline. A sequential pipeline, no abstractions,
-data flowing straight through the layers.
+- Collects metrics from four public APIs: GitHub, StackOverflow, World Bank
+  and OpenMeteo.
+- Sends them on to a monitoring target.
+- All three versions share the same domain model, data sources and target
+  client. Only the wiring between them is different.
 
-**Hexagonal (ports and adapters)** puts interfaces between the core logic and
-everything external, so adapters can be swapped without the core noticing.
+## The three versions
 
-**Messaging (channel-based)** decouples fetching from sending with in-process
-`System.Threading.Channels`, and is the only version that retries a failed
-fetch.
+- **Monolith (layered):** the baseline. A simple pipeline that runs one step
+  after another, with no abstractions.
+- **Hexagonal (ports and adapters):** the core logic only talks to
+  interfaces. Anything external can be swapped without touching the core.
+- **Messaging (channel-based):** fetching and sending are separated with
+  in-process `System.Threading.Channels`. The only version that retries a
+  failed fetch.
 
 ## How it was measured
 
-Everything runs against a fake HTTP handler and a mock target client, so results
-are deterministic and no network is involved.
+All tests use a fake HTTP handler and a mock target client. No network is
+involved, so the results are the same on every run.
 
-- **Extensibility** is computed from the git diff of the commit that added the
-  fourth data source, counting files touched, new lines versus changed lines,
-  and whether core logic had to change.
-- **Complexity** comes from Visual Studio Code Metrics.
-- **Performance** is 500 iterations per architecture, with pipeline construction
-  outside the timed region.
-- **Fault tolerance** covers a permanent source outage and a transient one that
-  recovers after the first failed request.
+- **Extensibility:** from the git diff of the commit that added a fourth
+  data source. It counts files touched, new lines against changed lines, and
+  whether core logic had to change.
+- **Complexity:** Visual Studio Code Metrics.
+- **Performance:** 500 runs per architecture. Setting up the pipeline isn't
+  timed.
+- **Fault tolerance:** two tests.
+  - Permanent outage: one source is down the whole time.
+  - Short outage: one source fails on the first request, then recovers.
 
 ## Results
 
@@ -61,35 +67,41 @@ Complexity and speed:
 | Hexagonal | 72 | 44 | 39 | 270 | 0.064 |
 | Messaging | 65 | 56 | 59 | 439 | 0.111 |
 
-Metrics delivered when one source fails transiently and then recovers: monolith
-and hexagonal 75% on average, messaging 100%. Under a permanent outage all three
-deliver everything from the remaining sources, so that scenario separates
-nothing.
+Fault tolerance:
 
-## What came out of it
+- **Short outage:** monolith and hexagonal delivered 75% of metrics on
+  average. Messaging delivered 100%.
+- **Permanent outage:** all three delivered everything from the other
+  sources. This test showed no difference.
 
-Hexagonal did not touch core logic. Adding a source meant 35 lines in a new
-adapter plus 2 lines of wiring, against 31 lines edited in place in the
-monolith. Roughly the same amount of code either way, which is the point worth
-being careful about: the saving is not in volume, it is in where the code goes.
-New file that cannot break what already works, rather than surgery on code that
-already does.
+## What I found
 
-It also scored higher on maintainability (72 against 55) at effectively
-identical speed, which is the result I did not expect: the abstraction was close
-to free.
+- **Hexagonal didn't touch the core.** Adding a source took 35 lines in a
+  new adapter plus 2 lines of wiring. The monolith needed 31 lines edited in
+  place.
+- **The amount of code was about the same.** The difference is where it
+  goes. Hexagonal adds a new file that can't break what already works. The
+  monolith edits code that already works.
+- **The abstraction was close to free.** Hexagonal scored higher on
+  maintainability (72 against 55) at practically the same speed. I didn't
+  expect that.
+- **Messaging costs the most.** Twice the code of the monolith, the worst
+  coupling score, and roughly 65% slower. In return, it's the only version
+  that delivered everything through the short outage.
 
-Messaging is where the cost shows up. Twice the code of the monolith, the worst
-coupling score, and roughly 65% slower. It buys the only implementation that
-survives a transient failure intact.
+## Caveats
 
-Two caveats I would not want glossed over. The sources are faked in memory, so
-the timings measure architectural overhead and nothing else; the monolith
-fetches sequentially while messaging producers run concurrently, so real network
-latency would likely reverse that ranking. And the fault tolerance gap exists
-because only the messaging version implements retry with exponential backoff.
-That was a deliberate choice, but it does mean scenario B measures a retry
-policy as much as it measures an architecture.
+- **The timings only measure the architecture's own overhead.** The sources
+  are faked in memory. The monolith fetches one source at a time, while the
+  messaging producers run concurrently. With real network latency, that
+  ranking would likely reverse.
+- **The fault tolerance gap comes from retries.** Only the messaging version
+  retries, with exponential backoff. That was on purpose. But it means the
+  short outage test measures a retry policy as much as an architecture.
+
+## Built with
+
+C#, .NET, xUnit.
 
 I wrote up the comparison in more detail
 [on the blog](/blog/three-integration-architectures).

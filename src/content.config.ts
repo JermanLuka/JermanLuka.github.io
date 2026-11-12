@@ -1,5 +1,6 @@
 import { defineCollection, z } from 'astro:content';
 import { glob } from 'astro/loaders';
+import { kinds } from './lib/projects';
 
 // Both collections read straight from a folder: drop a .md file in and it is
 // picked up. The schema validates frontmatter at build time, so a typo in a
@@ -11,6 +12,11 @@ const blog = defineCollection({
     title: z.string(),
     date: z.coerce.date(),
     summary: z.string(),
+    /**
+     * Meta description for search and link previews. Set it when `summary` is
+     * over about 155 characters, which search results would cut off.
+     */
+    description: z.string().max(160).optional(),
     tags: z.array(z.string()).default([]),
     /**
      * Name of an ongoing series this post belongs to, e.g. a devlog. Posts
@@ -29,9 +35,14 @@ const projects = defineCollection({
     title: z.string(),
     /** What state the work is in, not who it was for. */
     status: z.string(),
-    /** Who it was for. Drives the first row of filter chips. */
-    kind: z.enum(['client', 'personal']).default('personal'),
+    /**
+     * Who it was for. Drives the first row of filter chips. 'internal' is
+     * tooling built for an employer, with no public code.
+     */
+    kind: z.enum(kinds).default('personal'),
     summary: z.string(),
+    /** Meta description, as on blog posts. Falls back to `summary`. */
+    description: z.string().max(160).optional(),
     tags: z.array(z.string()).default([]),
     repo: z.url().optional(),
     /** The live product, for work that is out in the world. */

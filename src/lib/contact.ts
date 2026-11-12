@@ -3,6 +3,9 @@
 // spam, deleting the alias and creating another one is the whole fix.
 export const email = 'hi@lukajerman.dev';
 
+export const github = 'https://github.com/JermanLuka';
+export const linkedin = 'https://www.linkedin.com/in/luka-jerman-12046442b/';
+
 /**
  * Where the contact form posts: the Cloudflare Worker in worker/. While
  * developing, start it locally with `npm run dev` inside that folder.

@@ -2,6 +2,7 @@
 import Layout from '../layouts/Layout.astro';
 import PageHeading from '../components/PageHeading.astro';
 import { education, experience, intro, skills, yearsOfExperience } from '../lib/cv';
+import { pageTitle } from '../lib/seo';
 
 const years = yearsOfExperience();
 
@@ -14,21 +15,36 @@ const chipClass = 'rounded-full bg-white/5 px-2.5 py-1 text-xs text-zinc-400';
 ---
 
 <Layout
-  title="CV · Luka Jerman"
-  description="Experience, education, and what I work with."
+  title={pageTitle('CV: Backend & Full Stack .NET Developer')}
+  description={`CV of Luka Jerman, .NET developer: ${years}+ years of C#, ASP.NET Core / MVC and SQL Server across document management, IoT and ERP, plus gRPC and AI tooling.`}
   width="wide"
 >
   <PageHeading eyebrow="Curriculum vitae" title={`${years}+ years of production .NET`}>
     <p>
-      Software engineering across vessel monitoring, ERP, and enterprise
-      document management.
+      Software engineering across vessel monitoring, ERP, enterprise document
+      management, and AI tooling.
     </p>
   </PageHeading>
 
   <section class={sectionClass}>
     <h2 class={labelClass}>About</h2>
     <div class="max-w-3xl space-y-5 text-lg leading-relaxed text-zinc-300">
-      {intro.map((paragraph) => <p>{paragraph}</p>)}
+      {
+        intro.map((block) =>
+          Array.isArray(block) ? (
+            <ul class="space-y-2 text-zinc-400">
+              {block.map((item) => (
+                <li class="relative pl-5">
+                  <span aria-hidden="true" class="absolute top-[0.7em] left-0 size-1.5 rounded-full bg-dot/80" />
+                  {item}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>{block}</p>
+          ),
+        )
+      }
     </div>
   </section>
 

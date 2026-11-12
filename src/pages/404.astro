@@ -2,6 +2,7 @@
 // GitHub Pages serves this automatically for any path that does not exist.
 import Layout from '../layouts/Layout.astro';
 import PageHeading from '../components/PageHeading.astro';
+import { pageTitle } from '../lib/seo';
 
 const elsewhere = [
   { href: '/cv', label: 'CV', note: 'Where I have worked and what I work with.' },
@@ -16,8 +17,9 @@ const elsewhere = [
 ---
 
 <Layout
-  title="Page not found · Luka Jerman"
+  title={pageTitle('Page not found')}
   description="That page does not exist."
+  noindex
 >
   <PageHeading eyebrow="404" title="That page does not exist">
     <p>

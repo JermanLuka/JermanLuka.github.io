@@ -1,6 +1,6 @@
 ---
 import { getCollection } from 'astro:content';
-import { Image } from 'astro:assets';
+import { Image, getImage } from 'astro:assets';
 import Layout from '../layouts/Layout.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import PostRow from '../components/PostRow.astro';
@@ -8,6 +8,14 @@ import ResultCards from '../components/ResultCards.astro';
 import portrait from '../assets/portrait.png';
 import { skillLogos } from '../lib/skills';
 import { formatDate, isoDate } from '../lib/date';
+import { yearsOfExperience } from '../lib/cv';
+import { personSchema } from '../lib/seo';
+
+const years = yearsOfExperience();
+
+// Same size and format as the hero's 1x portrait, so the build reuses that file.
+const schemaPortrait = await getImage({ src: portrait, width: 480 });
+const schema = personSchema(Astro.site!, new URL(schemaPortrait.src, Astro.site));
 
 // Copies of the stack list in the scrolling strip. Half the strip must be
 // wider than the screen, or its end slides into view before the loop resets.
@@ -46,8 +54,10 @@ const external = (href: string) =>
 ---
 
 <Layout
-  description="Luka Jerman, software engineer. I build the systems that businesses run on every day, in C# and .NET."
+  title="Luka Jerman | Backend & Full Stack .NET Developer"
+  description={`Luka Jerman, backend and full stack .NET developer near Maribor, Slovenia. ${years}+ years of C#, ASP.NET Core / MVC and SQL Server, plus React and AI tooling.`}
   width="full"
+  schema={schema}
 >
   {/* Each block rises in on its own animation-delay, so the hero assembles
       top to bottom. On desktop it fills the screen below the header (4rem),
@@ -73,9 +83,12 @@ const external = (href: string) =>
         class="mt-6 max-w-xl text-lg leading-relaxed text-zinc-400 motion-safe:animate-rise sm:text-xl"
         style="animation-delay:200ms"
       >
-        I've written software for fishing fleets, factories, banks and
-        healthcare providers. <span class="text-zinc-100">I optimize systems and back it up with
-        numbers.</span>
+        {/* The years cover only what every job used. React is on the CV,
+            without a number. */}
+        Backend and full stack .NET developer based near Maribor, Slovenia. {years}+
+        years of C#, .NET, ASP.NET Core / MVC and SQL Server. I've built software for fishing fleets,
+        factories, banks and healthcare providers. <span class="text-zinc-100">I
+        also build agents and skills with Claude Code and Python.</span>
       </p>
 
       <div class="mt-10 flex flex-wrap items-center gap-3 motion-safe:animate-rise" style="animation-delay:280ms">
@@ -87,12 +100,18 @@ const external = (href: string) =>
           <span aria-hidden="true" class="transition group-hover:translate-x-0.5">→</span>
         </a>
         <a
-          href="#work"
+          href="/contact"
           class="glass rounded-full px-6 py-3 text-sm font-semibold text-white transition hover:bg-white/10"
         >
-          See the work
+          Get in touch
         </a>
       </div>
+
+      {/* The dot sits on the first line when the text wraps on a phone. */}
+      <p class="mt-6 flex items-start gap-2 text-sm text-zinc-400 motion-safe:animate-rise" style="animation-delay:340ms">
+        <span aria-hidden="true" class="mt-[0.45rem] size-1.5 shrink-0 rounded-full bg-dot"></span>
+        Open to backend and full stack roles.
+      </p>
     </div>
 
     <div class="relative mx-auto w-full max-w-xs motion-safe:animate-rise lg:mr-0" style="animation-delay:200ms">
@@ -219,7 +238,7 @@ const external = (href: string) =>
       ></div>
 
       <h2 class="relative mx-auto max-w-3xl font-display text-4xl tracking-[0.01em] text-white uppercase sm:text-6xl">
-        Need a project built or optimized?
+        Need a project built or optimised?
       </h2>
       <p class="relative mx-auto mt-5 max-w-xl text-zinc-400">
         Send me a message, or find me on GitHub and LinkedIn.

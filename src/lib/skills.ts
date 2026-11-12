@@ -10,12 +10,15 @@
 
 import {
   siClaude,
+  siDjango,
   siDocker,
   siDotnet,
   siElasticsearch,
   siGit,
   siJavascript,
   siMysql,
+  siPython,
+  siReact,
   siRedis,
   siTeamcity,
 } from 'simple-icons';
@@ -35,7 +38,12 @@ export type Skill = {
 export const skillLogos: Skill[] = [
   { name: 'C#', text: 'C#', hex: '512BD4' },
   { name: '.NET', path: siDotnet.path, hex: siDotnet.hex },
+  { name: 'ASP.NET Core / MVC', text: 'ASP', hex: '512BD4' },
   { name: 'JavaScript', path: siJavascript.path, hex: siJavascript.hex },
+  { name: 'React', path: siReact.path, hex: siReact.hex },
+  { name: 'Python', path: siPython.path, hex: siPython.hex, darkHex: '4B8BBE' },
+  // Django's brand green is near black, so it gets its lighter green here.
+  { name: 'Django', path: siDjango.path, hex: siDjango.hex, darkHex: '44B78B' },
   { name: 'SQL Server', text: 'SQL', hex: 'CC2927' },
   { name: 'MySQL', path: siMysql.path, hex: siMysql.hex },
   { name: 'Redis', path: siRedis.path, hex: siRedis.hex },

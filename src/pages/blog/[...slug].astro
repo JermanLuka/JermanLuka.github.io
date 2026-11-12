@@ -4,6 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 import Prose from '../../components/Prose.astro';
 import ProseImageLinks from '../../components/ProseImageLinks.astro';
 import { formatDate, isoDate } from '../../lib/date';
+import { blogPostingSchema, pageTitle } from '../../lib/seo';
 
 // Runs at build time: one static HTML file is produced per markdown file.
 export async function getStaticPaths() {
@@ -19,6 +20,15 @@ type Props = { post: CollectionEntry<'blog'> };
 const { post } = Astro.props;
 const { Content } = await render(post);
 
+const description = post.data.description ?? post.data.summary;
+const schema = blogPostingSchema(Astro.site!, {
+  title: post.data.title,
+  description,
+  published: post.data.date,
+  tags: post.data.tags,
+  url: new URL(`/blog/${post.id}`, Astro.site),
+});
+
 // Other instalments of the same series, oldest first. Empty for a standalone post.
 const series = post.data.series
   ? (
@@ -31,9 +41,10 @@ const series = post.data.series
 ---
 
 <Layout
-  title={`${post.data.title} · Luka Jerman`}
-  description={post.data.summary}
+  title={pageTitle(post.data.title)}
+  description={description}
   article={{ published: post.data.date }}
+  schema={schema}
 >
   <article>
     <header>

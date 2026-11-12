@@ -5,6 +5,7 @@ import PageHeading from '../../components/PageHeading.astro';
 import PostRow from '../../components/PostRow.astro';
 import TagFilter from '../../components/TagFilter.astro';
 import { formatDate, isoDate } from '../../lib/date';
+import { pageTitle } from '../../lib/seo';
 
 // Drafts are hidden in a production build but visible while running `npm run dev`.
 const posts = (
@@ -27,8 +28,8 @@ const emptyClass =
 ---
 
 <Layout
-  title="Blog · Luka Jerman"
-  description="Notes on what I am building and learning."
+  title={pageTitle('Blog: .NET Architecture and a Game Devlog')}
+  description="Writing by Luka Jerman on .NET integration architecture, plus the devlog of Relic of Ruin, a 3D RPG being built in Godot and C#."
   width="wide"
 >
   <PageHeading eyebrow="Writing" title="Notes from the build">

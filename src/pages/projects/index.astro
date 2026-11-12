@@ -4,6 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import PageHeading from '../../components/PageHeading.astro';
 import ProjectCard from '../../components/ProjectCard.astro';
 import TagFilter from '../../components/TagFilter.astro';
+import { pageTitle } from '../../lib/seo';
+import { kindBadge, kindFilterLabel, kinds } from '../../lib/projects';
 
 const projects = (
   await getCollection('projects', ({ data }) =>
@@ -20,14 +22,14 @@ const tags =
       )
     : [];
 
-// The client/personal chips are only worth showing when both kinds exist.
-const kinds = new Set(projects.map((p) => p.data.kind));
+// The kind chips are only worth showing when more than one kind exists, and
+// then only for the kinds that do.
+const present = new Set(projects.map((p) => p.data.kind));
 const kindOptions =
-  kinds.size > 1
-    ? [
-        { value: 'kind:client', label: 'Client work' },
-        { value: 'kind:personal', label: 'Personal' },
-      ]
+  present.size > 1
+    ? kinds
+        .filter((kind) => present.has(kind))
+        .map((kind) => ({ value: `kind:${kind}`, label: kindFilterLabel[kind] }))
     : [];
 
 const groups = [
@@ -40,8 +42,8 @@ const emptyClass =
 ---
 
 <Layout
-  title="Projects · Luka Jerman"
-  description="Things I have built, and things I am building."
+  title={pageTitle('Projects: .NET, AI Tooling and Godot')}
+  description="Projects by Luka Jerman: .NET integration architectures, an IoT hive monitoring app, AI tools for estimates and SEO, and a 3D RPG in Godot and C#."
   width="wide"
 >
   <PageHeading eyebrow="Selected work" title="Projects">
@@ -64,7 +66,7 @@ const emptyClass =
               href={`/projects/${project.id}`}
               title={project.data.title}
               status={project.data.status}
-              badge={project.data.kind === 'client' ? 'Client work' : undefined}
+              badge={kindBadge[project.data.kind]}
               summary={project.data.summary}
               tags={project.data.tags}
               filterValues={[`kind:${project.data.kind}`, ...project.data.tags]}

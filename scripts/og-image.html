@@ -1,0 +1,170 @@
+<!doctype html>
+<!--
+  Source for public/og-image.jpg, the preview shown when a link to the site is
+  shared (LinkedIn, Slack, WhatsApp). 1200x630 is the size they all expect.
+
+  To regenerate after changing this file, run from the project root:
+    node scripts/og-image.mjs
+
+  Fonts and the portrait are read straight from the project, so the image
+  matches the site.
+-->
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      @font-face {
+        font-family: 'Anton';
+        src: url('../node_modules/@fontsource/anton/files/anton-latin-400-normal.woff2') format('woff2');
+      }
+      @font-face {
+        font-family: 'Inter';
+        font-weight: 100 900;
+        src: url('../node_modules/@fontsource-variable/inter/files/inter-latin-wght-normal.woff2') format('woff2');
+      }
+
+      * { margin: 0; box-sizing: border-box; }
+
+      html, body {
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background: #070405;
+      }
+
+      body {
+        position: relative;
+        font-family: 'Inter', sans-serif;
+        color: #d4d4d8;
+      }
+
+      /* The same colour pools, grid and grain as the site's background. */
+      .glow { position: absolute; border-radius: 50%; filter: blur(110px); }
+      .glow.one { width: 640px; height: 640px; left: -160px; top: -300px; background: oklch(44.4% 0.177 26.899 / 0.45); }
+      .glow.two { width: 560px; height: 560px; left: 420px; top: -320px; background: oklch(25.8% 0.092 26.042 / 0.8); }
+      .glow.three { width: 520px; height: 520px; right: -200px; bottom: -260px; background: oklch(40.8% 0.123 38.172 / 0.35); }
+      .grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px),
+          linear-gradient(90deg, rgb(255 255 255 / 0.04) 1px, transparent 1px);
+        background-size: 64px 64px;
+        mask-image: radial-gradient(ellipse at top, #000 15%, transparent 70%);
+      }
+
+      .content {
+        position: absolute;
+        inset: 0;
+        display: flex;
+        align-items: center;
+        gap: 56px;
+        padding: 0 80px;
+      }
+
+      .text { flex: 1; min-width: 0; }
+
+      .pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 18px;
+        border-radius: 999px;
+        border: 1px solid rgb(255 255 255 / 0.1);
+        background: linear-gradient(180deg, rgb(255 255 255 / 0.07), rgb(255 255 255 / 0.03));
+        font-size: 16px;
+        font-weight: 600;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+        color: #e4e4e7;
+      }
+      .dot { width: 8px; height: 8px; border-radius: 50%; background: oklch(63.7% 0.237 25.331); }
+
+      .name {
+        margin-top: 30px;
+        font-family: 'Anton', sans-serif;
+        font-size: 116px;
+        line-height: 0.95;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        color: #fff;
+      }
+
+      .role {
+        margin-top: 14px;
+        font-family: 'Anton', sans-serif;
+        font-size: 50px;
+        line-height: 1.05;
+        letter-spacing: 0.01em;
+        text-transform: uppercase;
+        color: oklch(63.7% 0.237 25.331);
+      }
+
+      .stack {
+        margin-top: 26px;
+        font-size: 20px;
+        white-space: nowrap;
+        line-height: 1.4;
+        color: #d4d4d8;
+      }
+
+      .meta {
+        margin-top: 34px;
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        font-size: 20px;
+        color: #a1a1aa;
+      }
+      .meta svg { width: 34px; height: 34px; color: oklch(50.5% 0.213 27.518); }
+      .meta strong { color: #fff; font-weight: 600; }
+
+      .portrait {
+        flex: none;
+        width: 340px;
+        padding: 3px;
+        border-radius: 34px;
+        border: 1px solid rgb(255 255 255 / 0.1);
+        background: linear-gradient(180deg, rgb(255 255 255 / 0.08), rgb(255 255 255 / 0.02));
+        box-shadow: 0 0 120px oklch(44.4% 0.177 26.899 / 0.35);
+      }
+      .portrait img {
+        display: block;
+        width: 100%;
+        aspect-ratio: 4 / 5;
+        object-fit: cover;
+        border-radius: 31px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="glow one"></div>
+    <div class="glow two"></div>
+    <div class="glow three"></div>
+    <div class="grid"></div>
+
+    <div class="content">
+      <div class="text">
+        <h1 class="name">Luka Jerman</h1>
+        <p class="role">Backend &amp; Full Stack<br />.NET Developer</p>
+        <p class="stack">C# · .NET · ASP.NET Core / MVC · SQL Server · Redis · gRPC · React</p>
+        <p class="meta">
+          <svg viewBox="0 0 64 64" aria-hidden="true">
+            <rect width="64" height="64" rx="14" fill="currentColor" />
+            <g fill="#fff">
+              <path d="M16 16h6v26h8v6H16z" />
+              <path d="M42 16h6v20c0 6.6-5.4 12-12 12h-2v-6h2c3.3 0 6-2.7 6-6z" />
+            </g>
+          </svg>
+          <strong>lukajerman.dev</strong>
+          <span>·</span>
+          <span>Near Maribor, Slovenia</span>
+        </p>
+      </div>
+
+      <div class="portrait">
+        <img src="../src/assets/portrait.png" alt="" />
+      </div>
+    </div>
+  </body>
+</html>

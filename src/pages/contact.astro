@@ -5,6 +5,7 @@ import PageHeading from '../components/PageHeading.astro';
 import CopyEmail from '../components/CopyEmail.astro';
 import ContactForm from '../components/ContactForm.astro';
 import { email, turnstileSiteKey } from '../lib/contact';
+import { pageTitle } from '../lib/seo';
 
 // The form can't pass its spam check without a Turnstile key, so the page
 // leaves it out until there is one and lists the email and profiles instead.
@@ -31,8 +32,8 @@ const iconClass =
 ---
 
 <Layout
-  title="Contact · Luka Jerman"
-  description="How to get in touch with Luka Jerman."
+  title={pageTitle('Contact')}
+  description="Contact Luka Jerman, backend and full stack .NET developer near Maribor, Slovenia. Send a message, or find me on GitHub and LinkedIn."
 >
   <PageHeading eyebrow="Contact" title="Get in touch">
     {

@@ -1,7 +1,7 @@
 ---
-// The two results under the home page hero, real numbers from the CV. Each
-// card says what the work was, shows the before and after as bars on the same
-// scale, then the check that the speed-up didn't cost anything.
+// The results under the home page hero, real numbers from the CV. Each card
+// says what the work was, shows the before and after as bars on the same
+// scale, then the check that the gain didn't cost anything.
 
 type Bar = {
   label: string;
@@ -15,6 +15,8 @@ type Bar = {
 type Result = {
   title: string;
   number: string;
+  /** Drawn in the accent straight after the number, e.g. the "x" in 2.9x. */
+  unit?: string;
   text: string;
   summary: string;
   bars: Bar[];
@@ -25,8 +27,9 @@ const results: Result[] = [
   {
     title: 'PDF signature validation',
     number: '2.9',
+    unit: 'x',
     text: 'faster',
-    summary: 'Rewrote the PDF signing library of a document archive used by banks and healthcare providers.',
+    summary: 'Rewrote the PDF signing library of an enterprise document management platform used by banks and healthcare providers.',
     bars: [
       { label: 'Old library', value: '1,053 ms', width: 100 },
       { label: 'My rewrite', value: '363 ms', width: (363 / 1053) * 100, accent: true },
@@ -36,36 +39,50 @@ const results: Result[] = [
   {
     title: 'Script sandbox, two instances',
     number: '2',
+    unit: 'x',
     text: 'throughput',
-    summary: "Helped rebuild the same platform's script sandbox. I owned the gRPC service and its protocol to the workers.",
+    summary: 'Helped rebuild the script sandbox of an enterprise document management platform, and owned the gRPC service and its protocol to the workers.',
     bars: [
       { label: 'Old sandbox', value: '750/s', width: 50 },
       { label: 'New sandbox', value: '1,500/s', width: 100, accent: true },
     ],
     check: { label: 'Isolation', text: "Scripts can't reach the host" },
   },
+  {
+    title: 'Lead generation pipeline',
+    number: '12',
+    text: 'leads',
+    summary: 'Built a Python pipeline for sales on public business registers, drive-time maps and job APIs.',
+    bars: [
+      { label: 'Companies', value: '185,584', width: 100 },
+      { label: 'Leads', value: '12', width: (12 / 185584) * 100, accent: true },
+    ],
+    check: { label: 'Also', text: 'Company reports with source links' },
+  },
 ];
 ---
 
-<ul class="grid gap-5 md:grid-cols-2">
+{/* Two up on tablets and small laptops, with the third card taking the full
+    row under them; three across from xl, where the numbers fit on one line. */}
+<ul class="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
   {
     results.map((result) => (
-      <li class="glass relative flex flex-col overflow-hidden rounded-3xl p-6 sm:p-8">
+      <li class="glass relative flex flex-col overflow-hidden rounded-3xl p-6 sm:p-8 md:last:col-span-2 xl:last:col-span-1 xl:p-7">
         {/* A lit top edge in the accent. */}
         <div aria-hidden="true" class="absolute inset-x-10 top-0 h-px bg-linear-to-r from-transparent via-accent-500 to-transparent" />
 
         <p class="text-xs font-semibold tracking-[0.14em] text-accent-400 uppercase">{result.title}</p>
         {/* A capital X, not the × sign: Anton has no ×. */}
         <p class="mt-3 font-display text-5xl leading-tight tracking-[0.01em] text-white uppercase">
-          {result.number}<span class="text-accent-500">x</span> {result.text}
+          {result.number}{result.unit && <span class="text-accent-500">{result.unit}</span>} {result.text}
         </p>
         <p class="mt-2 text-sm leading-relaxed text-pretty text-zinc-400">{result.summary}</p>
 
-        {/* mt-auto lines the bars up across both cards when one summary wraps
+        {/* mt-auto lines the bars up across the cards when one summary wraps
             to more lines than the other. */}
         <div class="mt-auto space-y-2 pt-6 text-sm">
           {result.bars.map((bar) => (
-            <div class="grid grid-cols-[6.5rem_4.5rem_1fr] items-center gap-3 sm:grid-cols-[7rem_5rem_1fr]">
+            <div class="grid grid-cols-[6.5rem_4.5rem_1fr] items-center gap-3 sm:grid-cols-[7rem_5rem_1fr] xl:grid-cols-[6rem_4.5rem_1fr]">
               <span class="text-zinc-500">{bar.label}</span>
               <span class:list={['text-right tabular-nums', bar.accent ? 'font-medium text-white' : 'text-zinc-300']}>{bar.value}</span>
               <span aria-hidden="true" class="h-2 overflow-hidden rounded-sm bg-white/5">
@@ -74,13 +91,13 @@ const results: Result[] = [
                     'block h-full',
                     bar.accent ? 'bg-accent-500 shadow-[0_0_12px_var(--color-accent-500)]' : 'bg-zinc-600',
                   ]}
-                  style={`width:${bar.width}%`}
+                  style={bar.width > 0 ? `width:max(0.25rem, ${bar.width}%)` : 'width:0'}
                 />
               </span>
             </div>
           ))}
 
-          <div class="grid grid-cols-[6.5rem_1fr] items-center gap-3 sm:grid-cols-[7rem_1fr]">
+          <div class="grid grid-cols-[6.5rem_1fr] items-center gap-3 sm:grid-cols-[7rem_1fr] xl:grid-cols-[6rem_1fr]">
             <span class="text-zinc-500">{result.check.label}</span>
             <span class="flex items-center gap-1.5 text-zinc-200">
               {result.check.text}

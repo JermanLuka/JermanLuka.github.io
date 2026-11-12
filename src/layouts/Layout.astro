@@ -20,13 +20,19 @@ interface Props {
    * to lay out its own sections (the home page).
    */
   width?: 'narrow' | 'wide' | 'full';
+  /** Keep the page out of search results, e.g. the 404 page. */
+  noindex?: boolean;
+  /** JSON-LD structured data for this page. Builders live in lib/seo.ts. */
+  schema?: Record<string, unknown>;
 }
 
 const {
-  title = 'Luka Jerman',
-  description = 'Personal site of Luka Jerman: projects, writing, and what I am building.',
+  title = 'Luka Jerman | Backend & Full Stack .NET Developer',
+  description = 'Luka Jerman, backend and full stack .NET developer near Maribor, Slovenia, working in C#, ASP.NET Core / MVC, SQL Server and React.',
   article,
   width = 'narrow',
+  noindex = false,
+  schema,
 } = Astro.props;
 
 const column = {
@@ -39,7 +45,11 @@ const column = {
 // extension so the canonical matches the extensionless URL we link and index.
 const cleanPath = Astro.url.pathname.replace(/(?:index)?\.html$/, '') || '/';
 const canonical = new URL(cleanPath, Astro.site);
-const socialImage = new URL('/og-image.png', Astro.site);
+// One preview image for every page. Its source is scripts/og-image.html; see
+// scripts/og-image.mjs to regenerate it.
+const socialImage = new URL('/og-image.jpg', Astro.site);
+const socialImageAlt =
+  'Luka Jerman, Backend & Full Stack .NET Developer near Maribor, Slovenia. C#, .NET, ASP.NET Core / MVC, SQL Server, Redis, gRPC, React.';
 ---
 
 <!doctype html>
@@ -49,6 +59,9 @@ const socialImage = new URL('/og-image.png', Astro.site);
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    {/* Colours the browser's own toolbar on phones to match the page,
+        instead of a white bar above a dark site. */}
+    <meta name="theme-color" content="#070405" />
     {/* Only preload the Latin faces used above the fold. Extended Latin stays on demand. */}
     <link rel="preload" href={antonLatin} as="font" type="font/woff2" crossorigin="anonymous" />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin="anonymous" />
@@ -58,7 +71,8 @@ const socialImage = new URL('/og-image.png', Astro.site);
         requires a square multiple of 48px - it will not use the 32. */}
     <link rel="icon" type="image/png" sizes="192x192" href="/favicon-192.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="canonical" href={canonical} />
+    {/* A page kept out of search has no preferred URL to point at. */}
+    {noindex ? <meta name="robots" content="noindex" /> : <link rel="canonical" href={canonical} />}
 
     <title>{title}</title>
     <meta name="description" content={description} />
@@ -75,9 +89,12 @@ const socialImage = new URL('/og-image.png', Astro.site);
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content="image/jpeg" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialImageAlt} />
     <meta property="og:site_name" content="Luka Jerman" />
+    <meta property="og:locale" content="en_GB" />
     {
       article && (
         <meta
@@ -87,7 +104,21 @@ const socialImage = new URL('/og-image.png', Astro.site);
       )
     }
 
+    {/* X reads the og: title, description and image when its own tags are
+        missing, so the card type is the only one it needs. */}
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
+
+    {/* Escaping "<" keeps any text in the data from closing the tag early. */}
+    {
+      schema && (
+        <script
+          is:inline
+          type="application/ld+json"
+          set:html={JSON.stringify(schema).replace(/</g, '\\u003c')}
+        />
+      )
+    }
 
     {/*
       Applies a saved accent before the body is parsed, on purpose. Run any
@@ -109,12 +140,21 @@ const socialImage = new URL('/og-image.png', Astro.site);
   </head>
 
   <body class="bg-page font-body text-zinc-300 antialiased selection:bg-accent-600/50 selection:text-white">
+    {/* The first thing Tab reaches: keyboard and screen reader users can jump
+        past the header and nav straight to the page. Hidden until focused. */}
+    <a
+      href="#main"
+      class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-50 focus:rounded-full focus:bg-accent-700 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+    >
+      Skip to content
+    </a>
     {/* overflow-x-clip trims the background glows at the screen edge without
         turning this into a scroll container, which would break the sticky header. */}
     <div class="relative isolate flex min-h-screen flex-col overflow-x-clip">
       <Aurora />
       <Header />
-      <main class:list={['flex-1', column]}>
+      {/* scroll-mt keeps the sticky header from covering the top after the skip link jumps here. */}
+      <main id="main" class:list={['flex-1 scroll-mt-16', column]}>
         <slot />
       </main>
       <Footer />
