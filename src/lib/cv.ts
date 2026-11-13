@@ -17,7 +17,7 @@ export function yearsOfExperience(now = new Date()) {
  * strings is a bullet list under the paragraph before it.
  */
 export const intro: (string | string[])[] = [
-  "I'm a developer, from backend only roles to full stack. Most of my work is in C# and .NET. I've worked on:",
+  "I'm a full stack software engineer with a backend focus, experienced in C# and .NET. I've worked on:",
   [
     'Satellite vessel monitoring, for fisheries authorities and fleet operators.',
     'ERP systems for manufacturing and logistics.',
@@ -59,13 +59,10 @@ export const experience: Job[] = [
     blurb:
       'Internal AI tools, pre-sales, and smaller client projects, after the main client engagement ended.',
     notes: [
-      "Built a Claude Code skill that turns a client's scope document into the agency's Excel estimate. A Python script does the maths, with JSON Schema validation. It has 20 reusable work presets and 39 tests. Checked and adjusted against 3 real projects, then merged into the company's shared skills repo after code review.",
-      "Led SEO and AI search for the agency's own website. Set up Search Console, GA4 and Ahrefs, and shipped 6 PRs (redirects, analytics events, font and layout fixes, mobile performance). Mobile PageSpeed went from no score to 78, with 100 in Accessibility, Best Practices, and SEO.",
-      "Built a monthly SEO agent. It pulls Search Console and PostHog data, writes a plain-English report and proposes up to 3 changes. A person approves each one before it's applied.",
-      'Built a lead generation pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies down to 12 qualified leads. Also built a research skill that writes company reports for sales, with links to the sources.',
-      "Owned a client request end to end on the Django CMS behind a retail client's mobile app. Found that the reported \"bug\" was a feature that had never been built, then scoped it and delivered banner scheduling (18 tests).",
-      "On the same project, worked with the client's system engineer by phone and email to get the Linux server access and setup we needed. Did our team's first production deploy, over VPN, with a database backup and written step-by-step deploy instructions. Then wrote the client a summary of what we found and how the new feature works.",
-      'Fixed 5 crashes reported by Sentry in a React Native/Expo app.',
+      "Built a Claude Code skill that turns a client's scope document into the agency's Excel estimate. A Python script does the maths, with JSON Schema validation, 20 reusable presets and 39 tests. Checked and adjusted against 3 real projects, then merged into the company's shared skills repo after code review.",
+      'Owned a client request end to end on the Django CMS behind a retail client\'s mobile app. Found that the reported "bug" was a feature that had never been built, then scoped and delivered it (18 tests). Coordinated server access with the client\'s system engineer. Did our team\'s first production deploy over VPN, with a database backup and written step-by-step deploy instructions.',
+      'Built a lead generation pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies to 12 qualified leads. Also built a research skill that writes source-linked company reports.',
+      "Led SEO for the agency's website: 6 PRs, mobile PageSpeed from no score to 78, and 100 in Accessibility, Best Practices and SEO. Also built a monthly SEO agent that proposes changes for a person to approve.",
     ],
     stack: [
       'Python',
@@ -78,7 +75,6 @@ export const experience: Job[] = [
       'GA4',
       'PostHog',
       'Astro',
-      'React Native',
     ],
   },
   {

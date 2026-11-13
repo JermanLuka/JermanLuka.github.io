@@ -48,11 +48,10 @@ The same idea saves manual work:
 
 - It started on the free `github.io` address. It now runs on
   [lukajerman.dev](https://lukajerman.dev), registered through Cloudflare.
-- DNS points at GitHub Pages. GitHub issues the certificate, and Cloudflare
-  doesn't proxy the traffic.
-- That matters because `.dev` domains are on the HSTS preload list. Browsers
-  refuse to load them over plain HTTP at all, so there's no "works but
-  insecure" fallback.
+- DNS points at GitHub Pages. Cloudflare's proxy sits in front of it and
+  caches the pages.
+- `.dev` domains are on the HSTS preload list. Browsers refuse to load them
+  over plain HTTP at all, so there's no "works but insecure" fallback.
 - Cloudflare also handles email. The address on my contact page is an alias.
   It forwards to a personal inbox that isn't shown anywhere on the site.
 - If it ever gets too much spam, I delete the alias and make a new one.
