@@ -55,7 +55,7 @@ export const experience: Job[] = [
     role: 'Software Engineer',
     org: 'extra.dev',
     focus: 'AI tooling & client projects',
-    period: 'Oct 2026 to Nov 2026',
+    period: 'Oct 2026 to present',
     blurb:
       'Internal AI tools, pre-sales, and smaller client projects, after the main client engagement ended.',
     notes: [
@@ -157,8 +157,8 @@ export const experience: Job[] = [
 
 export const education = [
   {
-    what: "Associate's Degree, Computer Science",
-    org: 'DOBA University of Applied Sciences',
+    what: "Associate's Degree, Computer Science and Informatics",
+    org: 'DOBA Higher Vocational College',
     period: '2024 to 2027 (expected)',
     note: 'Programming patterns and architectures in integration systems. Studied while working full time.',
   },
