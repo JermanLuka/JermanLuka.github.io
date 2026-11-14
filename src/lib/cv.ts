@@ -78,7 +78,7 @@ export const experience: Job[] = [
     ],
   },
   {
-    role: 'Back-End Developer',
+    role: 'Software Engineer',
     org: 'extra.dev',
     focus: 'Enterprise document management',
     period: 'Apr 2025 to Sep 2026',
