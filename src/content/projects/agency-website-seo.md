@@ -20,10 +20,11 @@ Built at extra.dev, on the agency's own website. The code isn't public.
 - Set up Search Console, GA4 and Ahrefs.
 - Shipped 6 PRs: redirects, analytics events, font and layout fixes, and
   mobile performance.
-- Built a monthly SEO agent. It pulls Search Console and PostHog data and
-  writes a plain-English report.
-- The agent proposes up to 3 changes a month. A person approves each one
-  before it's applied.
+- Built a monthly SEO agent. It pulls Search Console, PostHog and other
+  data, scores the site on speed and SEO metrics, and writes a plain-English
+  report.
+- The agent recommends up to 3 changes a month and can make the code changes
+  itself. A person reviews each one before it's applied.
 
 ## Results
 

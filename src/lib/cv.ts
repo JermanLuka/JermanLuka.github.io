@@ -17,20 +17,27 @@ export function yearsOfExperience(now = new Date()) {
  * strings is a bullet list under the paragraph before it.
  */
 export const intro: (string | string[])[] = [
-  "I'm a full stack software engineer with a backend focus, experienced in C# and .NET. I've worked on:",
+  "I'm a software engineer building AI agents and automations on top of solid backend and integration work.",
+  "Recently I've built:",
+  [
+    'An agent that turns client scope documents into project estimates.',
+    'An SEO agent that analyses site data and implements fixes in code.',
+    'An automated lead generation pipeline that narrowed 185,584 companies to 12 qualified leads.',
+  ],
+  'Before that, I spent four years on backend and full stack systems in C# and .NET, across three fairly different domains:',
   [
     'Satellite vessel monitoring, for fisheries authorities and fleet operators.',
     'ERP systems for manufacturing and logistics.',
-    'An enterprise document management platform used by banks, healthcare providers and financial institutions.',
+    'An enterprise document management and certified archiving platform used by banks, healthcare providers and financial institutions.',
   ],
-  'I also automate work with AI agents and scripts. I keep the AI in check, so the results are reliable:',
+  'That background is what makes the AI work reliable. Most useful automation is integration work: connecting APIs, data and existing systems without breaking what clients depend on. I also keep the AI in check:',
   [
     "Scripts calculate the numbers, so the AI doesn't guess them.",
     "The data is checked against a template/schema before it's used.",
-    "A person approves every change before it's applied.",
+    "A person reviews every change before it's applied.",
     'Regression tests catch anything that breaks.',
   ],
-  'The work I find most interesting needs me to understand a system before changing it. For example:',
+  'I like understanding a system before changing it. For example:',
   [
     'Tracing a production incident through the logs to its real cause.',
     'Extending an API that enterprise clients depend on, without breaking them.',
@@ -54,20 +61,22 @@ export const experience: Job[] = [
   {
     role: 'Software Engineer',
     org: 'extra.dev',
-    focus: 'AI tooling & client projects',
+    focus: 'AI agents & automation',
     period: 'Oct 2026 to present',
     blurb:
-      'Internal AI tools, pre-sales, and smaller client projects, after the main client engagement ended.',
+      'AI agents and automations for internal workflows, pre-sales and client projects.',
     notes: [
-      "Built a Claude Code skill that turns a client's scope document into the agency's Excel estimate. A Python script does the maths, with JSON Schema validation, 20 reusable presets and 39 tests. Checked and adjusted against 3 real projects, then merged into the company's shared skills repo after code review.",
+      "Built an AI estimation tool (a Claude Code skill) that turns a client's scope document into the agency's Excel estimate. It cut a typical estimate from up to a day of manual work to about 20 minutes plus review. A Python script does the maths, with JSON Schema validation, 20 reusable presets and 39 tests. Checked against 3 real projects, then merged into the company's shared skills repo after code review.",
+      'Built an SEO agent that runs monthly. It pulls data from Google Search Console, PostHog and other sources, scores the site on speed and SEO metrics, and recommends improvements. It can make the code changes itself, and a person reviews each one before it\'s applied.',
+      'Built an automated lead generation pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies to 12 qualified leads. Also built a research skill that writes source-linked company reports.',
+      "Led SEO for the agency's website: 6 PRs, mobile PageSpeed from no score to 78, and 100 in Accessibility, Best Practices and SEO.",
       'Owned a client request end to end on the Django CMS behind a retail client\'s mobile app. Found that the reported "bug" was a feature that had never been built, then scoped and delivered it (18 tests). Coordinated server access with the client\'s system engineer. Did our team\'s first production deploy over VPN, with a database backup and written step-by-step deploy instructions.',
-      'Built a lead generation pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies to 12 qualified leads. Also built a research skill that writes source-linked company reports.',
-      "Led SEO for the agency's website: 6 PRs, mobile PageSpeed from no score to 78, and 100 in Accessibility, Best Practices and SEO. Also built a monthly SEO agent that proposes changes for a person to approve.",
     ],
     stack: [
       'Python',
-      'Django',
       'Claude Code',
+      'AI agents',
+      'Django',
       'JSON Schema',
       'Docker',
       'Linux',
@@ -97,7 +106,9 @@ export const experience: Job[] = [
       '.NET',
       'ASP.NET Core',
       'gRPC',
+      'Roslyn',
       'Pipe-based IPC',
+      'JWT',
       'Redis',
       'Elasticsearch',
       'SQL Server',
@@ -170,18 +181,23 @@ export const education = [
   },
 ];
 
-// .NET stays the first group: it is the main stack. The JSON-LD on the home
-// page lists every item here as knowsAbout, so this is the one place to edit.
+// AI automation leads, .NET backend is second: that's the positioning. The
+// JSON-LD on the home page lists every item here as knowsAbout, so this is the
+// one place to edit, and an item should appear in only one group.
 export const skills = [
+  {
+    group: 'AI automation',
+    items: ['AI agents', 'Agentic workflows', 'Claude Code', 'Python', 'JSON Schema'],
+  },
   {
     group: '.NET backend',
     items: ['C#', '.NET', 'ASP.NET Core / MVC', 'Entity Framework', 'gRPC'],
   },
   { group: 'Data', items: ['SQL', 'SQL Server', 'MySQL', 'Redis', 'Elasticsearch'] },
-  { group: 'Beyond .NET', items: ['Python', 'Django', 'JavaScript', 'React'] },
+  { group: 'Beyond .NET', items: ['Django', 'JavaScript', 'React'] },
   {
     group: 'Tooling',
-    items: ['Docker', 'Linux', 'Git', 'TeamCity', 'AI agents / Claude Code'],
+    items: ['Docker', 'Linux', 'Git', 'TeamCity'],
   },
   {
     group: 'Areas',
