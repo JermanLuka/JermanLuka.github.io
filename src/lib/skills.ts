@@ -36,7 +36,6 @@ export type Skill = {
 };
 
 export const skillLogos: Skill[] = [
-  { name: 'Claude Code', path: siClaude.path, hex: siClaude.hex },
   { name: 'Python', path: siPython.path, hex: siPython.hex, darkHex: '4B8BBE' },
   { name: 'C#', text: 'C#', hex: '512BD4' },
   { name: '.NET', path: siDotnet.path, hex: siDotnet.hex },
@@ -63,4 +62,5 @@ export const skillLogos: Skill[] = [
     hex: siTeamcity.hex,
     darkHex: 'E2E8F0',
   },
+  { name: 'Claude Code', path: siClaude.path, hex: siClaude.hex },
 ];

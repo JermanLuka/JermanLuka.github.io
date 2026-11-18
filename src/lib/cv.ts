@@ -17,25 +17,18 @@ export function yearsOfExperience(now = new Date()) {
  * strings is a bullet list under the paragraph before it.
  */
 export const intro: (string | string[])[] = [
-  "I'm a software engineer building AI agents and automations on top of solid backend and integration work.",
-  "Recently I've built:",
-  [
-    'An agent that turns client scope documents into project estimates.',
-    'An SEO agent that analyses site data and implements fixes in code.',
-    'An automated lead generation pipeline that narrowed 185,584 companies to 12 qualified leads.',
-  ],
-  'Before that, I spent four years on backend and full stack systems in C# and .NET, across three fairly different domains:',
+  "I'm a software engineer focused on backend and integration work: APIs, data and the systems that connect them. I also deploy to Linux and Windows servers.",
+  "I've spent four years on backend and full stack systems in C# and .NET, across three fairly different domains:",
   [
     'Satellite vessel monitoring, for fisheries authorities and fleet operators.',
     'ERP systems for manufacturing and logistics.',
     'An enterprise document management and certified archiving platform used by banks, healthcare providers and financial institutions.',
   ],
-  'That background is what makes the AI work reliable. Most useful automation is integration work: connecting APIs, data and existing systems without breaking what clients depend on. I also keep the AI in check:',
+  'Recently I have also built tooling and automation:',
   [
-    "Scripts calculate the numbers, so the AI doesn't guess them.",
-    "The data is checked against a template/schema before it's used.",
-    "A person reviews every change before it's applied.",
-    'Regression tests catch anything that breaks.',
+    'A pipeline that narrowed 185,584 companies to 12 qualified leads.',
+    'A tool that turns client scope documents into project estimates.',
+    'SEO and performance work on the agency site, with a monthly agent that suggests improvements.',
   ],
   'I like understanding a system before changing it. For example:',
   [
@@ -61,29 +54,28 @@ export const experience: Job[] = [
   {
     role: 'Software Engineer',
     org: 'extra.dev',
-    focus: 'AI agents & automation',
+    focus: 'Backend, integrations & deployment',
     period: 'Oct 2026 to present',
     blurb:
-      'AI agents and automations for internal workflows, pre-sales and client projects.',
+      'Backend work, integrations and deployments for client projects, plus internal tools for the agency.',
     notes: [
-      "Built an AI estimation tool (a Claude Code skill) that turns a client's scope document into the agency's Excel estimate. It cut a typical estimate from up to a day of manual work to about 20 minutes plus review. A Python script does the maths, with JSON Schema validation, 20 reusable presets and 39 tests. Checked against 3 real projects, then merged into the company's shared skills repo after code review.",
-      'Built an SEO agent that runs monthly. It pulls data from Google Search Console, PostHog and other sources, scores the site on speed and SEO metrics, and recommends improvements. It can make the code changes itself, and a person reviews each one before it\'s applied.',
-      'Built an automated lead generation pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies to 12 qualified leads. Also built a research skill that writes source-linked company reports.',
-      "Led SEO for the agency's website: 6 PRs, mobile PageSpeed from no score to 78, and 100 in Accessibility, Best Practices and SEO.",
       'Owned a client request end to end on the Django CMS behind a retail client\'s mobile app. Found that the reported "bug" was a feature that had never been built, then scoped and delivered it (18 tests). Coordinated server access with the client\'s system engineer. Did our team\'s first production deploy over VPN, with a database backup and written step-by-step deploy instructions.',
+      "Led SEO for the agency's website: 6 PRs, mobile PageSpeed from no score to 78, and 100 in Accessibility, Best Practices and SEO. As an extra, automated the monthly review with an agent that pulls Search Console and PostHog data and recommends improvements. A person reviews every change.",
+      'Built a data pipeline in Python on public business registers, drive-time maps and job APIs. It narrowed 185,584 UK companies to 12 qualified leads.',
+      "Built an estimation tool that turns a client's scope document into the agency's Excel estimate, cutting up to a day of manual work to about 20 minutes plus review. A Python script does the maths, with JSON Schema validation and 39 tests. Merged into the company's shared repo after code review.",
     ],
     stack: [
       'Python',
-      'Claude Code',
-      'AI agents',
       'Django',
-      'JSON Schema',
-      'Docker',
       'Linux',
+      'nginx',
+      'Docker',
+      'JSON Schema',
       'Google Search Console API',
       'GA4',
       'PostHog',
       'Astro',
+      'Claude Code',
     ],
   },
   {
@@ -122,10 +114,11 @@ export const experience: Job[] = [
     focus: 'Full stack',
     period: 'May 2024 to Apr 2025',
     blurb:
-      "The app customers use for BlueTraker, EMA's satellite vessel monitoring system (VMS). It's used by fisheries authorities and fleet operators.",
+      "The app customers use for BlueTraker, EMA's satellite vessel monitoring system (VMS), which collects data from IoT devices on vessels. It's used by fisheries authorities and fleet operators.",
     notes: [
-      'Built vessel tracking, event timelines and interactive maps on telemetry from BlueTraker, NetSenz and GearSenz devices. The devices send data over Iridium satellite at sea, and over GSM/GPRS in coastal range.',
-      'Built fishing effort tracking by combining gear sensor readings with vessel speed and position patterns. Added map views showing where a fleet had concentrated its effort in an area.',
+      "Built event timelines for vessels, which the system didn't have before.",
+      'Refactored and modernised the backend for vessel tracking and interactive maps, on telemetry from BlueTraker, NetSenz and GearSenz devices (Iridium satellite at sea, GSM/GPRS in coastal range). The code became simpler, clearer and easier to maintain.',
+      'Built fishing effort tracking by combining IoT gear sensor readings with vessel speed and position patterns. Added map views showing where a fleet had concentrated its effort in an area.',
       'Automated the compliance documents a Mexican customer had to file with their national fisheries regulator, covering vessel activity, status and position.',
       'Talked to clients directly, from gathering requirements through to implementation.',
       'Used DTO, DAO, repository, unit of work and dependency injection patterns across the stack.',
@@ -147,7 +140,7 @@ export const experience: Job[] = [
     focus: 'Full stack',
     period: 'Oct 2022 to May 2024',
     blurb:
-      'ERP systems for manufacturing clients, mainly production and logistics modules.',
+      'ERP systems for manufacturing clients, mainly production and logistics modules, including IoT device integration on the production line.',
     notes: [
       'Worked on several client projects across the full stack, from requirements through to implementation.',
       'The longest was an ERP rollout for a Slovenian food manufacturer. I was the only developer, working with the project manager: gathering requirements from the client, reviewing technical solutions and helping with system design.',
@@ -181,34 +174,35 @@ export const education = [
   },
 ];
 
-// AI automation leads, .NET backend is second: that's the positioning. The
+// Backend leads, automation comes near the end: that's the positioning. The
 // JSON-LD on the home page lists every item here as knowsAbout, so this is the
 // one place to edit, and an item should appear in only one group.
 export const skills = [
-  {
-    group: 'AI automation',
-    items: ['AI agents', 'Agentic workflows', 'Claude Code', 'Python', 'JSON Schema'],
-  },
   {
     group: '.NET backend',
     items: ['C#', '.NET', 'ASP.NET Core / MVC', 'Entity Framework', 'gRPC'],
   },
   { group: 'Data', items: ['SQL', 'SQL Server', 'MySQL', 'Redis', 'Elasticsearch'] },
-  { group: 'Beyond .NET', items: ['Django', 'JavaScript', 'React'] },
+  { group: 'Beyond .NET', items: ['Python', 'Django', 'JavaScript', 'React'] },
   {
-    group: 'Tooling',
-    items: ['Docker', 'Linux', 'Git', 'TeamCity'],
+    group: 'Deployment & CI',
+    items: ['GitHub Actions', 'TeamCity', 'Docker', 'Linux', 'nginx', 'Git'],
   },
   {
     group: 'Areas',
     items: [
       'Integration systems',
       'API design',
+      'IoT and sensor data',
       'Message queues',
       'Background job processing',
       'Event driven architecture',
       'SEO (Search Console, GA4)',
     ],
+  },
+  {
+    group: 'Automation',
+    items: ['AI agents', 'Claude Code', 'JSON Schema'],
   },
   {
     group: 'Working with clients',

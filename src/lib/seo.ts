@@ -36,9 +36,9 @@ export function personSchema(site: URL, image: URL) {
     name: siteName,
     url: new URL('/', site).href,
     image: image.href,
-    jobTitle: 'Software Engineer, AI Automation & Agentic Workflows',
+    jobTitle: 'Software Engineer, Backend & Integrations',
     description:
-      'Software engineer building AI agents and automations on top of backend and integration work in C#, .NET, ASP.NET Core / MVC, SQL Server and Python.',
+      'Software engineer building backend services and integrations in C#, .NET, ASP.NET Core / MVC, SQL Server and Python.',
     // A region rather than a city: I live near Maribor, not in it, and the
     // exact town stays off the site.
     address: {
